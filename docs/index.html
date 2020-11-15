@@ -11,7 +11,7 @@
 
 <meta name="author" content="Belinda Cornes" />
 
-<meta name="date" content="2020-11-12" />
+<meta name="date" content="2020-11-14" />
 
 <title>John/Tolman Workflow</title>
 
@@ -295,7 +295,7 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/thejacksonlaboratory/John-Tolman_workflow">
+  <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow">
     <span class="fa fa-github"></span>
      
     Source code
@@ -312,13 +312,14 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">John/Tolman Workflow</h1>
 <h4 class="author">Belinda Cornes</h4>
-<h4 class="date">2020-11-12</h4>
+<h4 class="date">2020-11-14</h4>
 
 </div>
 
 <div id="TOC">
 <ul>
 <li><a href="#project-at-a-glance">Project At A Glance</a></li>
+<li><a href="#haplotype-phasing">Haplotype Phasing</a></li>
 <li><a href="#phenotype-qc">1. Phenotype QC</a></li>
 <li><a href="#genotype-qc">2. Genotype QC</a></li>
 <li><a href="#qtl-analysis">3. QTL Analysis</a></li>
@@ -345,7 +346,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-11-12
+<strong>Last updated:</strong> 2020-11-14
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -436,16 +437,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong4d36b43"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 4d36b43 </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomTheJacksonLaboratoryJohnTolmanWorkflowtreeec48947a2a1d4e34e8bd837e821f28c4c5d0b0bbtargetblankec48947a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/tree/ec48947a2a1d4e34e8bd837e821f28c4c5d0b0bb" target="_blank">ec48947</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong4d36b43" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomTheJacksonLaboratoryJohnTolmanWorkflowtreeec48947a2a1d4e34e8bd837e821f28c4c5d0b0bbtargetblankec48947a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 4d36b43. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/tree/ec48947a2a1d4e34e8bd837e821f28c4c5d0b0bb" target="_blank">ec48947</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -458,31 +459,116 @@ Ignored files:
 Untracked files:
     Untracked:  analysis/2.1_geneseek2qtl2.R
     Untracked:  analysis/2.2_geneseek2intensity.R
+    Untracked:  analysis/index_v2.Rmd
+    Untracked:  data/bad_markers_all_129Sj.v265d.RData
+    Untracked:  data/bad_markers_all_b6.v265d.RData
+    Untracked:  data/bad_markers_all_d2.q105x.RData
     Untracked:  data/e_129Sj.v265d.RData
     Untracked:  data/e_b6.v265d.RData
     Untracked:  data/e_d2.q105x.RData
+    Untracked:  data/e_g_snpg_samqc_129Sj.v265d.RData
+    Untracked:  data/e_g_snpg_samqc_b6.v265d.RData
+    Untracked:  data/e_g_snpg_samqc_d2.q105x.RData
+    Untracked:  data/e_qc_129Sj.v265d.RData
+    Untracked:  data/e_qc_b6.v265d.RData
+    Untracked:  data/e_qc_d2.q105x.RData
     Untracked:  data/errors_ind.RData
+    Untracked:  data/errors_ind_129Sj.v265d.RData
+    Untracked:  data/errors_ind_b6.v265d.RData
+    Untracked:  data/errors_ind_d2.q105x.RData
+    Untracked:  data/errors_ind_qc_129Sj.v265d.RData
+    Untracked:  data/errors_ind_qc_b6.v265d.RData
+    Untracked:  data/errors_ind_qc_d2.q105x.RData
+    Untracked:  data/genotype_errors_marker_129Sj.v265d.RData
+    Untracked:  data/genotype_errors_marker_b6.v265d.RData
+    Untracked:  data/genotype_errors_marker_d2.q105x.RData
+    Untracked:  data/genotype_errors_marker_qc_129Sj.v265d.RData
+    Untracked:  data/genotype_errors_marker_qc_b6.v265d.RData
+    Untracked:  data/genotype_errors_marker_qc_d2.q105x.RData
+    Untracked:  data/genotype_freq_marker_129Sj.v265d.RData
+    Untracked:  data/genotype_freq_marker_b6.v265d.RData
+    Untracked:  data/genotype_freq_marker_d2.q105x.RData
+    Untracked:  data/genotype_freq_marker_qc_129Sj.v265d.RData
+    Untracked:  data/genotype_freq_marker_qc_b6.v265d.RData
+    Untracked:  data/genotype_freq_marker_qc_d2.q105x.RData
+    Untracked:  data/gm_allqc_129Sj.v265d.RData
+    Untracked:  data/gm_allqc_b6.v265d.RData
+    Untracked:  data/gm_allqc_d2.q105x.RData
+    Untracked:  data/gm_samqc_129Sj.v265d.RData
+    Untracked:  data/gm_samqc_b6.v265d.RData
+    Untracked:  data/gm_samqc_d2.q105x.RData
     Untracked:  data/m_129Sj.v265d.RData
     Untracked:  data/m_b6.v265d.RData
     Untracked:  data/m_d2.q105x.RData
+    Untracked:  data/m_qc_129Sj.v265d.RData
+    Untracked:  data/m_qc_b6.v265d.RData
+    Untracked:  data/m_qc_d2.q105x.RData
     Untracked:  data/nxo_129Sj.v265d.RData
     Untracked:  data/nxo_b6.v265d.RData
     Untracked:  data/nxo_d2.q105x.RData
+    Untracked:  data/nxo_qc_129Sj.v265d.RData
+    Untracked:  data/nxo_qc_b6.v265d.RData
+    Untracked:  data/nxo_qc_d2.q105x.RData
     Untracked:  data/percent_missing_id_129Sj.v265d.RData
     Untracked:  data/percent_missing_id_b6.v265d.RData
     Untracked:  data/percent_missing_id_d2.q105x.RData
+    Untracked:  data/percent_missing_id_qc_129Sj.v265d.RData
+    Untracked:  data/percent_missing_id_qc_b6.v265d.RData
+    Untracked:  data/percent_missing_id_qc_d2.q105x.RData
+    Untracked:  data/percent_missing_marker.RData
+    Untracked:  data/percent_missing_marker_129Sj.v265d.RData
+    Untracked:  data/percent_missing_marker_b6.v265d.RData
+    Untracked:  data/percent_missing_marker_d2.q105x.RData
+    Untracked:  data/percent_missing_marker_qc_129Sj.v265d.RData
+    Untracked:  data/percent_missing_marker_qc_b6.v265d.RData
+    Untracked:  data/percent_missing_marker_qc_d2.q105x.RData
+    Untracked:  data/qc_info_bad_sample_129Sj.v265d.RData
+    Untracked:  data/qc_info_bad_sample_b6.v265d.RData
+    Untracked:  data/qc_info_bad_sample_d2.q105x.RData
     Untracked:  data/summary.cg_129Sj.v265d.RData
     Untracked:  data/summary.cg_b6.v265d.RData
     Untracked:  data/summary.cg_d2.q105x.RData
+    Untracked:  data/summary.cg_qc_129Sj.v265d.RData
+    Untracked:  data/summary.cg_qc_b6.v265d.RData
+    Untracked:  data/summary.cg_qc_d2.q105x.RData
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_129Sj.v265d.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_b6.v265d.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_d2.q105x.pdf
     Untracked:  output/Percent_missing_genotype_data_129Sj.v265d.pdf
     Untracked:  output/Percent_missing_genotype_data_b6.v265d.pdf
     Untracked:  output/Percent_missing_genotype_data_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_d2.q105x.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_129Sj.v265d.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_b6.v265d.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_d2.q105x.pdf
+    Untracked:  output/genotype_error_marker_129Sj.v265d.pdf
+    Untracked:  output/genotype_error_marker_b6.v265d.pdf
+    Untracked:  output/genotype_error_marker_d2.q105x.pdf
+    Untracked:  output/genotype_error_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/genotype_error_marker_qc_b6.v265d.pdf
+    Untracked:  output/genotype_error_marker_qc_d2.q105x.pdf
+    Untracked:  output/genotype_frequency_marker.pdf
+    Untracked:  output/genotype_frequency_marker_129Sj.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_b6.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_d2.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_qc_b6.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_qc_d2.q105x.pdf
     Untracked:  output/number_crossover_129Sj.v265d.pdf
     Untracked:  output/number_crossover_b6.v265d.pdf
     Untracked:  output/number_crossover_d2.q105x.pdf
-
-Unstaged changes:
-    Modified:   analysis/_site.yml
+    Untracked:  output/number_crossover_qc_129Sj.v265d.pdf
+    Untracked:  output/number_crossover_qc_b6.v265d.pdf
+    Untracked:  output/number_crossover_qc_d2.q105x.pdf
 
 </code></pre>
 <p>
@@ -526,7 +612,41 @@ Message
 Rmd
 </td>
 <td>
-4d36b43
+<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/ec48947a2a1d4e34e8bd837e821f28c4c5d0b0bb/analysis/index.Rmd" target="_blank">ec48947</a>
+</td>
+<td>
+Belinda Cornes
+</td>
+<td>
+2020-11-14
+</td>
+<td>
+updating qc steps
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/575cd8cd86ca14e8e7917782b914120389cd82c1/docs/index.html" target="_blank">575cd8c</a>
+</td>
+<td>
+Belinda Cornes
+</td>
+<td>
+2020-11-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/4d36b4394a15d54d1fc55bec20810f21f3184378/analysis/index.Rmd" target="_blank">4d36b43</a>
 </td>
 <td>
 Belinda Cornes
@@ -543,7 +663,7 @@ Build site
 Rmd
 </td>
 <td>
-353cf60
+<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/353cf60a4bcbbeaf246db667c4b2f93929879d11/analysis/index.Rmd" target="_blank">353cf60</a>
 </td>
 <td>
 Belinda Cornes
@@ -568,22 +688,30 @@ Start workflowr project.
 <li>Samples: b6.v265d
 <ul>
 <li><a href="0.1_samples_batch_b6.v265d.html">Total Samples: 202</a></li>
-<li><a href="BAF.LRR.samples_b6.v265d.html">BAF &amp; LRR plots</a></li>
 </ul></li>
 <li>Samples: b6.q105x
 <ul>
 <li><a href="0.1_samples_batch_b6.q105x.html">Total Samples: ??</a></li>
-<li><a href="BAF.LRR.samples_b6.q105x.html">BAF &amp; LRR plots</a></li>
 </ul></li>
 <li>Samples: d2.q105x
 <ul>
 <li><a href="0.1_samples_batch_d2.q105x.html">Total Samples: 134</a></li>
-<li><a href="BAF.LRR.samples_d2.q105x.html">BAF &amp; LRR plots</a></li>
 </ul></li>
 <li>Samples: 129Sj.v265d
 <ul>
 <li><a href="0.1_samples_batch_129Sj.v265d.html">Total Samples: 136</a></li>
-<li><a href="BAF.LRR.samples_129Sj.v265d.html">BAF &amp; LRR plots</a></li>
+</ul></li>
+</ul>
+</div>
+<div id="haplotype-phasing" class="section level3">
+<h3>Haplotype Phasing</h3>
+<ul>
+<li>Before QC
+<ul>
+<li><a href="0.2_haplotype_comparison_bqc_b6.v265d.html">b6.v265d</a></li>
+<li><a href="0.2_haplotype_comparison_bqc_b6.q105x.html">b6.q105x</a></li>
+<li><a href="0.2_haplotype_comparison_bqc_d2.q105x.html">d2.q105x</a></li>
+<li><a href="0.2_haplotype_comparison_bqc_129Sj.v265d.html">129Sj.v265d</a></li>
 </ul></li>
 </ul>
 </div>
