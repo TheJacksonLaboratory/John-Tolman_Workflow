@@ -12,7 +12,7 @@ output:
 * Samples: b6.v265d
 	+ [Total Samples: 202](0.1_samples_batch_b6.v265d.html)
 * Samples: b6.q105x
-	+ [Total Samples: ??](0.1_samples_batch_b6.q105x.html)
+	+ [Total Samples: 383](0.1_samples_batch_b6.q105x.html)
 * Samples: d2.q105x
 	+ [Total Samples: 134](0.1_samples_batch_d2.q105x.html)
 * Samples: 129Sj.v265d
