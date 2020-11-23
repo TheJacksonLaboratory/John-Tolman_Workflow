@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Belinda Cornes" />
+
+<meta name="date" content="2020-11-23" />
+
+<title>Step 2: SNP QC [all samples]</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">John/Tolman Workflow</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Step 2: SNP QC [all samples]</h1>
+<h4 class="author">Belinda Cornes</h4>
+<h4 class="date">2020-11-23</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#loading-project">Loading Project</a></li>
+<li><a href="#marker-missing-data">Marker Missing Data</a></li>
+<li><a href="#marker-genotype-frequencies">Marker Genotype Frequencies</a></li>
+<li><a href="#marker-genotype-errors">Marker Genotype Errors</a></li>
+<li><a href="#removing-markers">Removing Markers</a></li>
+<li><a href="#array-intensities">Array Intensities</a></li>
+</ul>
+</div>
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-11-23
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>John-Toleman_workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div class="panel-group" id="workflowr-checks">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20201112code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20201112)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20201112code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20201112)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it difficult for you and others to run your code on a different machine. Change the absolute path(s) below to the suggested relative path(s) to make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/Users/corneb/Documents/MyJax/CS/Projects/Simon.John.Tolman/workflowr/John-Toleman_workflow
+</td>
+<td style="text-align:left;">
+.
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomTheJacksonLaboratoryJohnTolmanWorkflowtree894ae437b4969067c977960bf37443e515272ae7targetblank894ae43a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/tree/894ae437b4969067c977960bf37443e515272ae7" target="_blank">894ae43</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomTheJacksonLaboratoryJohnTolmanWorkflowtree894ae437b4969067c977960bf37443e515272ae7targetblank894ae43a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/tree/894ae437b4969067c977960bf37443e515272ae7" target="_blank">894ae43</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    analysis/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/0.2_haplotype_comparison_bqc_all.samples.Rmd.R
+    Untracked:  analysis/2.1_geneseek2qtl2.R
+    Untracked:  analysis/2.1_sample_bqc_all.samples.Rmd.R
+    Untracked:  analysis/2.2.1_snp_qc_all.samples.Rmd.R
+    Untracked:  analysis/2.2_geneseek2intensity.R
+    Untracked:  analysis/2.3.1_afterqc_all.samples.Rmd.R
+    Untracked:  analysis/index_v2.Rmd
+    Untracked:  data/bad_markers_all_129Sj.v265d.RData
+    Untracked:  data/bad_markers_all_all.RData
+    Untracked:  data/bad_markers_all_b6.q105x.RData
+    Untracked:  data/bad_markers_all_b6.v265d.RData
+    Untracked:  data/bad_markers_all_d2.q105x.RData
+    Untracked:  data/e_129Sj.v265d.RData
+    Untracked:  data/e_b6.q105x.RData
+    Untracked:  data/e_b6.v265d.RData
+    Untracked:  data/e_d2.q105x.RData
+    Untracked:  data/e_g_snpg_samqc_129Sj.v265d.RData
+    Untracked:  data/e_g_snpg_samqc_all.RData
+    Untracked:  data/e_g_snpg_samqc_b6.q105x.RData
+    Untracked:  data/e_g_snpg_samqc_b6.v265d.RData
+    Untracked:  data/e_g_snpg_samqc_d2.q105x.RData
+    Untracked:  data/e_qc_129Sj.v265d.RData
+    Untracked:  data/e_qc_b6.q105x.RData
+    Untracked:  data/e_qc_b6.v265d.RData
+    Untracked:  data/e_qc_d2.q105x.RData
+    Untracked:  data/errors_ind.RData
+    Untracked:  data/errors_ind_129Sj.v265d.RData
+    Untracked:  data/errors_ind_b6.q105x.RData
+    Untracked:  data/errors_ind_b6.v265d.RData
+    Untracked:  data/errors_ind_d2.q105x.RData
+    Untracked:  data/errors_ind_qc_129Sj.v265d.RData
+    Untracked:  data/errors_ind_qc_b6.q105x.RData
+    Untracked:  data/errors_ind_qc_b6.v265d.RData
+    Untracked:  data/errors_ind_qc_d2.q105x.RData
+    Untracked:  data/genotype_errors_marker_129Sj.v265d.RData
+    Untracked:  data/genotype_errors_marker_b6.q105x.RData
+    Untracked:  data/genotype_errors_marker_b6.v265d.RData
+    Untracked:  data/genotype_errors_marker_d2.q105x.RData
+    Untracked:  data/genotype_errors_marker_qc_129Sj.v265d.RData
+    Untracked:  data/genotype_errors_marker_qc_b6.q105x.RData
+    Untracked:  data/genotype_errors_marker_qc_b6.v265d.RData
+    Untracked:  data/genotype_errors_marker_qc_d2.q105x.RData
+    Untracked:  data/genotype_freq_marker_129Sj.v265d.RData
+    Untracked:  data/genotype_freq_marker_all.RData
+    Untracked:  data/genotype_freq_marker_b6.q105x.RData
+    Untracked:  data/genotype_freq_marker_b6.v265d.RData
+    Untracked:  data/genotype_freq_marker_d2.q105x.RData
+    Untracked:  data/genotype_freq_marker_qc_129Sj.v265d.RData
+    Untracked:  data/genotype_freq_marker_qc_all.RData
+    Untracked:  data/genotype_freq_marker_qc_b6.q105x.RData
+    Untracked:  data/genotype_freq_marker_qc_b6.v265d.RData
+    Untracked:  data/genotype_freq_marker_qc_d2.q105x.RData
+    Untracked:  data/gm_allqc_129Sj.v265d.RData
+    Untracked:  data/gm_allqc_all.RData
+    Untracked:  data/gm_allqc_b6.q105x.RData
+    Untracked:  data/gm_allqc_b6.v265d.RData
+    Untracked:  data/gm_allqc_d2.q105x.RData
+    Untracked:  data/gm_samqc_129Sj.v265d.RData
+    Untracked:  data/gm_samqc_all.RData
+    Untracked:  data/gm_samqc_b6.q105x.RData
+    Untracked:  data/gm_samqc_b6.v265d.RData
+    Untracked:  data/gm_samqc_d2.q105x.RData
+    Untracked:  data/m_129Sj.v265d.RData
+    Untracked:  data/m_b6.q105x.RData
+    Untracked:  data/m_b6.v265d.RData
+    Untracked:  data/m_d2.q105x.RData
+    Untracked:  data/m_qc_129Sj.v265d.RData
+    Untracked:  data/m_qc_b6.q105x.RData
+    Untracked:  data/m_qc_b6.v265d.RData
+    Untracked:  data/m_qc_d2.q105x.RData
+    Untracked:  data/nxo_129Sj.v265d.RData
+    Untracked:  data/nxo_b6.q105x.RData
+    Untracked:  data/nxo_b6.v265d.RData
+    Untracked:  data/nxo_d2.q105x.RData
+    Untracked:  data/nxo_qc_129Sj.v265d.RData
+    Untracked:  data/nxo_qc_b6.q105x.RData
+    Untracked:  data/nxo_qc_b6.v265d.RData
+    Untracked:  data/nxo_qc_d2.q105x.RData
+    Untracked:  data/percent_missing_id_129Sj.v265d.RData
+    Untracked:  data/percent_missing_id_all.RData
+    Untracked:  data/percent_missing_id_b6.q105x.RData
+    Untracked:  data/percent_missing_id_b6.v265d.RData
+    Untracked:  data/percent_missing_id_d2.q105x.RData
+    Untracked:  data/percent_missing_id_qc_129Sj.v265d.RData
+    Untracked:  data/percent_missing_id_qc_all.RData
+    Untracked:  data/percent_missing_id_qc_b6.q105x.RData
+    Untracked:  data/percent_missing_id_qc_b6.v265d.RData
+    Untracked:  data/percent_missing_id_qc_d2.q105x.RData
+    Untracked:  data/percent_missing_marker.RData
+    Untracked:  data/percent_missing_marker_129Sj.v265d.RData
+    Untracked:  data/percent_missing_marker_all.RData
+    Untracked:  data/percent_missing_marker_b6.q105x.RData
+    Untracked:  data/percent_missing_marker_b6.v265d.RData
+    Untracked:  data/percent_missing_marker_d2.q105x.RData
+    Untracked:  data/percent_missing_marker_qc_129Sj.v265d.RData
+    Untracked:  data/percent_missing_marker_qc_all.RData
+    Untracked:  data/percent_missing_marker_qc_b6.q105x.RData
+    Untracked:  data/percent_missing_marker_qc_b6.v265d.RData
+    Untracked:  data/percent_missing_marker_qc_d2.q105x.RData
+    Untracked:  data/qc_info_bad_sample_129Sj.v265d.RData
+    Untracked:  data/qc_info_bad_sample_all.RData
+    Untracked:  data/qc_info_bad_sample_b6.q105x.RData
+    Untracked:  data/qc_info_bad_sample_b6.v265d.RData
+    Untracked:  data/qc_info_bad_sample_d2.q105x.RData
+    Untracked:  data/summary.cg_129Sj.v265d.RData
+    Untracked:  data/summary.cg_all.RData
+    Untracked:  data/summary.cg_b6.q105x.RData
+    Untracked:  data/summary.cg_b6.v265d.RData
+    Untracked:  data/summary.cg_d2.q105x.RData
+    Untracked:  data/summary.cg_qc_129Sj.v265d.RData
+    Untracked:  data/summary.cg_qc_all.RData
+    Untracked:  data/summary.cg_qc_b6.q105x.RData
+    Untracked:  data/summary.cg_qc_b6.v265d.RData
+    Untracked:  data/summary.cg_qc_d2.q105x.RData
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_129Sj.v265d.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_b6.q105x.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_b6.v265d.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_d2.q105x.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_129Sj.v265d.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_all.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_b6.q105x.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_b6.v265d.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_d2.q105x.pdf
+    Untracked:  output/genotype_error_marker_129Sj.v265d.pdf
+    Untracked:  output/genotype_error_marker_b6.q105x.pdf
+    Untracked:  output/genotype_error_marker_b6.v265d.pdf
+    Untracked:  output/genotype_error_marker_d2.q105x.pdf
+    Untracked:  output/genotype_error_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/genotype_error_marker_qc_b6.q105x.pdf
+    Untracked:  output/genotype_error_marker_qc_b6.v265d.pdf
+    Untracked:  output/genotype_error_marker_qc_d2.q105x.pdf
+    Untracked:  output/genotype_frequency_marker.pdf
+    Untracked:  output/genotype_frequency_marker_129Sj.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_all.pdf
+    Untracked:  output/genotype_frequency_marker_b6.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_b6.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_d2.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_qc_all.pdf
+    Untracked:  output/genotype_frequency_marker_qc_b6.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_qc_b6.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_qc_d2.q105x.pdf
+    Untracked:  output/number_crossover_129Sj.v265d.pdf
+    Untracked:  output/number_crossover_all.pdf
+    Untracked:  output/number_crossover_b6.q105x.pdf
+    Untracked:  output/number_crossover_b6.v265d.pdf
+    Untracked:  output/number_crossover_d2.q105x.pdf
+    Untracked:  output/number_crossover_qc_129Sj.v265d.pdf
+    Untracked:  output/number_crossover_qc_b6.q105x.pdf
+    Untracked:  output/number_crossover_qc_b6.v265d.pdf
+    Untracked:  output/number_crossover_qc_d2.q105x.pdf
+
+Unstaged changes:
+    Modified:   analysis/0.2_haplotype_comparison_bqc_129Sj.v265d.Rmd
+    Modified:   analysis/0.2_haplotype_comparison_bqc_b6.v265d.Rmd
+    Modified:   analysis/0.2_haplotype_comparison_bqc_d2.q105x.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/2.2.1_snp_qc_all.samples.Rmd</code>) and HTML (<code>docs/2.2.1_snp_qc_all.samples.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/894ae437b4969067c977960bf37443e515272ae7/analysis/2.2.1_snp_qc_all.samples.Rmd" target="_blank">894ae43</a>
+</td>
+<td>
+Belinda Cornes
+</td>
+<td>
+2020-11-23
+</td>
+<td>
+all samples
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="loading-project" class="section level3">
+<h3>Loading Project</h3>
+<pre class="r"><code>load(&quot;data/e_g_snpg_samqc_all.RData&quot;)
+gm &lt;- get(load(&quot;data/gm_samqc_all.RData&quot;))
+
+gm</code></pre>
+<pre><code>Object of class cross2 (crosstype &quot;do&quot;)
+
+Total individuals               818
+No. genotyped individuals       818
+No. phenotyped individuals      818
+No. with both geno &amp; pheno      818
+
+No. phenotypes                    1
+No. covariates                    3
+No. phenotype covariates          0
+
+No. chromosomes                  20
+Total markers                137220
+
+No. markers by chr:
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+10415 10432  8203  7951  8028  8125  7756  6714  6979  6628  7430  6441  6323 
+   14    15    16    17    18    19     X 
+ 6227  5531  5174  5320  4784  3676  5083 </code></pre>
+<p>It can also be useful to look at the proportion of missing genotypes by marker. Markers with a lot of missing data were likely difficult to call, and so the genotypes that were called may contain a lot of errors.</p>
+</div>
+<div id="marker-missing-data" class="section level3">
+<h3>Marker Missing Data</h3>
+<pre class="r"><code>pmis_mar &lt;- n_missing(gm, &quot;marker&quot;, &quot;proportion&quot;)*100
+save(pmis_mar, file = &quot;data/percent_missing_marker_all.RData&quot;)
+
+par(mar=c(5.1,0.6,0.6, 0.6))
+hist(pmis_mar, breaks=seq(0, 100, length=201),
+     main=&quot;&quot;, yaxt=&quot;n&quot;, ylab=&quot;&quot;, xlab=&quot;Percent missing genotypes&quot;)
+rug(pmis_mar)</code></pre>
+<p><img src="figure/2.2.1_snp_qc_all.samples.Rmd/Missing%20data%20in%20Markers%20and%20Genotype%20frequencies%20Markers-1.png" width="912" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pdf(file = &quot;output/Percent_missing_genotype_data_per_marker_all.pdf&quot;)
+par(mar=c(5.1,0.6,0.6, 0.6))
+hist(pmis_mar, breaks=seq(0, 100, length=201),
+     main=&quot;&quot;, yaxt=&quot;n&quot;, ylab=&quot;&quot;, xlab=&quot;Percent missing genotypes&quot;)
+rug(pmis_mar)
+dev.off()</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<table class="table table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+pmis_mar_5
+</td>
+<td style="text-align:center;">
+10546
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_10
+</td>
+<td style="text-align:center;">
+7141
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_15
+</td>
+<td style="text-align:center;">
+5604
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_25
+</td>
+<td style="text-align:center;">
+4298
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_50
+</td>
+<td style="text-align:center;">
+3668
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_75
+</td>
+<td style="text-align:center;">
+3596
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: white !important;background-color: black !important;">
+total_snps
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: black !important;">
+137220
+</td>
+</tr>
+</tbody>
+</table>
+<p>For the markers with lots of missing genotypes, it’s not necessarily the case that the remaining genotypes are full of errors, but in studying the allele intensities at these SNPs, it does appear that for the bulk of such markers, the genotypes are not being called appropriately.</p>
+</div>
+<div id="marker-genotype-frequencies" class="section level3">
+<h3>Marker Genotype Frequencies</h3>
+<pre class="r"><code>g &lt;- do.call(&quot;cbind&quot;, gm$geno[1:19])
+fg &lt;- do.call(&quot;cbind&quot;, gm$founder_geno[1:19])
+g &lt;- g[,colSums(fg==0)==0]
+fg &lt;- fg[,colSums(fg==0)==0]
+fgn &lt;- colSums(fg==3)
+
+gf_mar &lt;- t(apply(g, 2, function(a) table(factor(a, 1:3))/sum(a != 0)))
+gn_mar &lt;- t(apply(g, 2, function(a) table(factor(a, 1:3))))
+
+pdf(file = &quot;output/genotype_frequency_marker_all.pdf&quot;)
+par(mfrow=c(2,2), mar=c(0.6, 0.6, 2.6, 0.6))
+for(i in 1:4) {
+  triplot(c(&quot;AA&quot;, &quot;AB&quot;, &quot;BB&quot;), main=paste0(&quot;MAF = &quot;, i, &quot;/8&quot;))
+  z &lt;- gf_mar[fgn==i,]
+  z &lt;- z[rowSums(is.na(z)) &lt; 3,]
+  tripoints(z, pch=21, bg=&quot;gray80&quot;, cex=0.6)
+  tripoints(c((1-i/8)^2, 2*i/8*(1-i/8), (i/8)^2), pch=21, bg=&quot;violetred&quot;)
+}
+dev.off()</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<pre class="r"><code>par(mfrow=c(2,2), mar=c(0.6, 0.6, 2.6, 0.6))
+for(i in 1:4) {
+  triplot(c(&quot;AA&quot;, &quot;AB&quot;, &quot;BB&quot;), main=paste0(&quot;MAF = &quot;, i, &quot;/8&quot;))
+  z &lt;- gf_mar[fgn==i,]
+  z &lt;- z[rowSums(is.na(z)) &lt; 3,]
+  tripoints(z, pch=21, bg=&quot;gray80&quot;, cex=0.6)
+  tripoints(c((1-i/8)^2, 2*i/8*(1-i/8), (i/8)^2), pch=21, bg=&quot;violetred&quot;)
+}</code></pre>
+<p><img src="figure/2.2.1_snp_qc_all.samples.Rmd/Genotype%20frequencies%20Markers-1.png" width="912" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>save(gf_mar, file = &quot;data/genotype_freq_marker_all.RData&quot;)</code></pre>
+<p>The bulk of the markers seem well behaved, but there are a number of markers with unusual genotype frequencies. There are markers that show no homozygotes for the major allele. (These sit on the left edge.) There are markers that are monomorphic (100% AA genotypes; lower-right vertex). And there some markers with some of each homozygote but no heterozygotes (bottom edge). Further, there are a bunch of markers where the minor allele appears to be private to one founder strain (upper-left panel) but show a high frequency of minor alleles in the DO offspring.</p>
+</div>
+<div id="marker-genotype-errors" class="section level3">
+<h3>Marker Genotype Errors</h3>
+<pre class="r"><code>#errors_mar &lt;- colSums(e&gt;2)/n_typed(gm, &quot;marker&quot;)*100
+
+#grayplot(pmis_mar, errors_mar,
+#         xlab=&quot;Proportion missing&quot;, ylab=&quot;Proportion genotyping errors&quot;)
+
+#pdf(file = &quot;output/genotype_error_marker_all.pdf&quot;)
+#grayplot(pmis_mar, errors_mar,
+#         xlab=&quot;Proportion missing&quot;, ylab=&quot;Proportion genotyping errors&quot;)
+#dev.off()
+
+#save(errors_mar, file = &quot;data/genotype_errors_marker_all.RData&quot;)</code></pre>
+<p>Markers with higher rates of missing genotypes tend to show higher errors rates.</p>
+</div>
+<div id="removing-markers" class="section level3">
+<h3>Removing Markers</h3>
+<div id="missingness" class="section level4">
+<h4>Missingness</h4>
+<pre><code>[1] 7141</code></pre>
+</div>
+<div id="monomorphiclow-frequency-markers" class="section level4">
+<h4>Monomorphic/Low Frequency markers</h4>
+<pre><code>Warning in find_markerpos(gm, rownames(low_freq_df)): Some markers not found:
+NA, NA.1, NA.2, NA.3, NA.4, NA.5, NA.6, NA.7, NA.8, NA.9, NA.10, NA.11, NA.12,
+NA.13, NA.14, NA.15, NA.16, NA.17, NA.18, NA.19, NA.20, NA.21, NA.22, NA.23, NA.
+24, NA.25, NA.26, NA.27, NA.28, NA.29, NA.30, NA.31, NA.32, NA.33, NA.34, NA.
+35, NA.36, NA.37, NA.38, NA.39, NA.40, NA.41, NA.42, NA.43, NA.44, NA.45, NA.
+46, NA.47, NA.48, NA.49, NA.50, NA.51, NA.52, NA.53, NA.54, NA.55, NA.56, NA.57,
+NA.58, NA.59, NA.60, NA.61, NA.62, NA.63, NA.64, NA.65, NA.66, NA.67, NA.68, NA.
+69, NA.70, NA.71, NA.72, NA.73, NA.74, NA.75, NA.76, NA.77, NA.78, NA.79, NA.80,
+NA.81, NA.82, NA.83, NA.84, NA.85, NA.86, NA.87, NA.88, NA.89, NA.90, NA.91, NA.
+92, NA.93, NA.94, NA.95, NA.96, NA.97, NA.98, NA.99, NA.100, NA.101, NA.102, NA.
+103, NA.104, NA.105, NA.106, NA.107, NA.108, NA.109, NA.110, NA.111, NA.112, NA.
+113, NA.114, NA.115, NA.116, NA.117, NA.118, NA.119, NA.120, NA.121, NA.122, NA.
+123, NA.124, NA.125, NA.126, NA.127, NA.128, NA.129, NA.130, NA.131, NA.132, NA.
+133, NA.134, NA.135, NA.136, NA.137, NA.138, NA.139, NA.140, NA.141, NA.142, NA.
+143, NA.144, NA.145, NA.146, NA.147, NA.148, NA.149, NA.150, NA.151, NA.152, NA.
+153, NA.154, NA.155, NA.156, NA.157, NA.158, NA.159, NA.160, NA.161, NA.162, NA.
+163, NA.164, NA.165, NA.166, NA.167, NA.168, NA.169, NA.170, NA.171, NA.172, NA.
+173, NA.174, NA.175, NA.176, NA.177, NA.178, NA.179, NA.180, NA.181, NA.182, NA.
+183, NA.184, NA.185, NA.186, NA.187, NA.188, NA.189, NA.190, NA.191, NA.192, NA.
+193, NA.194, NA.195, NA.196, NA.197, NA.198, NA.199, NA.200, NA.201, NA.202, NA.
+203, NA.204, NA.205, NA.206, NA.207, NA.208, NA.209, NA.210, NA.211, NA.212, NA.
+213, NA.214, NA.215, NA.216, NA.217, NA.218, NA.219, NA.220, NA.221, NA.222, NA.
+223, NA.224, NA.225, NA.226, NA.227, NA.228, NA.229, NA.230, NA.231, NA.232, NA.
+233, NA.234, NA.235, NA.236, NA.237, NA.238, NA.239, NA.240, NA.241, NA.242, NA.
+243, NA.244, NA.245, NA.246, NA.247, NA.248, NA.249, NA.250, NA.251, NA.252, NA.
+253, NA.254, NA.255, NA.256, NA.257, NA.258, NA.259, NA.260, NA.261, NA.262, NA.
+263, NA.264, NA.265, NA.266, NA.267, NA.268, NA.269, NA.270, NA.271, NA.272, NA.
+273, NA.274, NA.275, NA.276, NA.277, NA.278, NA.279, NA.280, NA.281, NA.282, NA.
+283, NA.284, NA.285, NA.286, NA.287, NA.288, NA.289, NA.290, NA.291, NA.292, NA.
+293, NA.294, NA.295, NA.296, NA.297, NA.298, NA.299, NA.300, NA.301, NA.302, NA.
+303, NA.304, NA.305, NA.306, NA.307, NA.308, NA.309, NA.310, NA.311, NA.312, NA.
+313, NA.314, NA.315, NA.316, NA.317, NA.318, NA.319, NA.320, NA.321, NA.322, NA.
+323, NA.324, NA.325, NA.326, NA.327, NA.328, NA.329, NA.330, NA.331, NA.332, NA.
+333, NA.334, NA.335, NA.336, NA.337, NA.338, NA.339, NA.340, NA.341, NA.342, NA.
+343, NA.344, NA.345, NA.346, NA.347, NA.348, NA.349, NA.350, NA.351, NA.352, NA.
+353, NA.354, NA.355, NA.356, NA.357, NA.358, NA.359, NA.360, NA.361, NA.362, NA.
+363, NA.364, NA.365, NA.366, NA.367, NA.368, NA.369, NA.370, NA.371, NA.372, NA.
+373, NA.374, NA.375, NA.376, NA.377, NA.378, NA.379, NA.380, NA.381, NA.382, NA.
+383, NA.384, NA.385, NA.386, NA.387, NA.388, NA.389, NA.390, NA.391, NA.392, NA.
+393, NA.394, NA.395, NA.396, NA.397, NA.398, NA.399, NA.400, NA.401, NA.402, NA.
+403, NA.404, NA.405, NA.406, NA.407, NA.408, NA.409, NA.410, NA.411, NA.412, NA.
+413, NA.414, NA.415, NA.416, NA.417, NA.418, NA.419, NA.420, NA.421, NA.422, NA.
+423, NA.424, NA.425, NA.426, NA.427, NA.428, NA.429, NA.430, NA.431, NA.432, NA.
+433, NA.434, NA.435, NA.436, NA.437, NA.438, NA.439, NA.440, NA.441, NA.442, NA.
+443, NA.444, NA.445, NA.446, NA.447, NA.448, NA.449, NA.450, NA.451, NA.452, NA.
+453, NA.454, NA.455, NA.456, NA.457, NA.458, NA.459, NA.460, NA.461, NA.462, NA.
+463, NA.464, NA.465, NA.466, NA.467, NA.468, NA.469, NA.470, NA.471, NA.472, NA.
+473, NA.474, NA.475, NA.476, NA.477, NA.478, NA.479, NA.480, NA.481, NA.482, NA.
+483, NA.484, NA.485, NA.486, NA.487, NA.488, NA.489, NA.490, NA.491, NA.492, NA.
+493, NA.494, NA.495, NA.496, NA.497, NA.498, NA.499, NA.500, NA.501, NA.502, NA.
+503, NA.504, NA.505, NA.506, NA.507, NA.508, NA.509, NA.510, NA.511, NA.512, NA.
+513, NA.514, NA.515, NA.516, NA.517, NA.518, NA.519, NA.520, NA.521, NA.522, NA.
+523, NA.524, NA.525, NA.526, NA.527, NA.528, NA.529, NA.530, NA.531, NA.532, NA.
+533, NA.534, NA.535, NA.536, NA.537, NA.538, NA.539, NA.540, NA.541, NA.542, NA.
+543, NA.544, NA.545, NA.546, NA.547, NA.548, NA.549, NA.550, NA.551, NA.552, NA.
+553, NA.554, NA.555, NA.556, NA.557, NA.558, NA.559, NA.560, NA.561, NA.562, NA.
+563, NA.564, NA.565, NA.566, NA.567, NA.568, NA.569, NA.570, NA.571, NA.572, NA.
+573, NA.574, NA.575, NA.576, NA.577, NA.578, NA.579, NA.580, NA.581, NA.582, NA.
+583, NA.584, NA.585, NA.586, NA.587, NA.588, NA.589, NA.590, NA.591, NA.592, NA.
+593, NA.594, NA.595, NA.596, NA.597, NA.598, NA.599, NA.600, NA.601, NA.602, NA.
+603, NA.604, NA.605, NA.606, NA.607, NA.608, NA.609, NA.610, NA.611, NA.612, NA.
+613, NA.614, NA.615, NA.616, NA.617, NA.618, NA.619, NA.620, NA.621, NA.622, NA.
+623, NA.624, NA.625, NA.626, NA.627, NA.628, NA.629, NA.630, NA.631, NA.632, NA.
+633, NA.634, NA.635, NA.636, NA.637, NA.638, NA.639, NA.640, NA.641, NA.642, NA.
+643, NA.644, NA.645, NA.646, NA.647, NA.648, NA.649, NA.650, NA.651, NA.652, NA.
+653, NA.654, NA.655, NA.656, NA.657, NA.658, NA.659, NA.660, NA.661, NA.662, NA.
+663, NA.664, NA.665, NA.666, NA.667, NA.668, NA.669, NA.670, NA.671, NA.672, NA.
+673, NA.674, NA.675, NA.676, NA.677, NA.678, NA.679, NA.680, NA.681, NA.682, NA.
+683, NA.684, NA.685, NA.686, NA.687, NA.688, NA.689, NA.690, NA.691, NA.692, NA.
+693, NA.694, NA.695, NA.696, NA.697, NA.698, NA.699, NA.700, NA.701, NA.702, NA.
+703, NA.704, NA.705, NA.706, NA.707, NA.708, NA.709, NA.710, NA.711, NA.712, NA.
+713, NA.714, NA.715, NA.716, NA.717, NA.718, NA.719, NA.720, NA.721, NA.722, NA.
+723, NA.724, NA.725, NA.726, NA.727, NA.728, NA.729, NA.730, NA.731, NA.732, NA.
+733, NA.734, NA.735, NA.736, NA.737, NA.738, NA.739, NA.740, NA.741, NA.742, NA.
+743, NA.744, NA.745, NA.746, NA.747, NA.748, NA.749, NA.750, NA.751, NA.752, NA.
+753, NA.754, NA.755, NA.756, NA.757, NA.758, NA.759, NA.760, NA.761, NA.762, NA.
+763, NA.764, NA.765, NA.766, NA.767, NA.768, NA.769, NA.770, NA.771, NA.772, NA.
+773, NA.774, NA.775, NA.776, NA.777, NA.778, NA.779, NA.780, NA.781, NA.782, NA.
+783, NA.784, NA.785, NA.786, NA.787, NA.788, NA.789, NA.790, NA.791, NA.792, NA.
+793, NA.794, NA.795, NA.796, NA.797, NA.798, NA.799, NA.800, NA.801, NA.802, NA.
+803, NA.804, NA.805, NA.806, NA.807, NA.808, NA.809, NA.810, NA.811, NA.812, NA.
+813, NA.814, NA.815, NA.816, NA.817, NA.818, NA.819, NA.820, NA.821, NA.822, NA.
+823, NA.824, NA.825, NA.826, NA.827, NA.828, NA.829, NA.830, NA.831, NA.832, NA.
+833, NA.834, NA.835, NA.836, NA.837, NA.838, NA.839, NA.840, NA.841, NA.842, NA.
+843, NA.844, NA.845, NA.846, NA.847, NA.848, NA.849, NA.850, NA.851, NA.852, NA.
+853, NA.854, NA.855, NA.856, NA.857, NA.858, NA.859, NA.860, NA.861, NA.862, NA.
+863, NA.864, NA.865, NA.866, NA.867, NA.868, NA.869, NA.870, NA.871, NA.872, NA.
+873, NA.874, NA.875, NA.876, NA.877, NA.878, NA.879, NA.880, NA.881, NA.882, NA.
+883, NA.884, NA.885, NA.886, NA.887, NA.888, NA.889, NA.890, NA.891, NA.892, NA.
+893, NA.894, NA.895, NA.896, NA.897, NA.898, NA.899, NA.900, NA.901, NA.902, NA.
+903, NA.904, NA.905, NA.906, NA.907, NA.908, NA.909, NA.910, NA.911, NA.912, NA.
+913, NA.914, NA.915, NA.916, NA.917, NA.918, NA.919, NA.920, NA.921, NA.922, NA.
+923, NA.924, NA.925, NA.926, NA.927, NA.928, NA.929, NA.930, NA.931, NA.932, NA.
+933, NA.934, NA.935, NA.936, NA.937, NA.938, NA.939, NA.940, NA.941, NA.942, NA.
+943, NA.944, NA.945, NA.946, NA.947, NA.948, NA.949, NA.950, NA.951, NA.952, NA.
+953, NA.954, NA.955, NA.956, NA.957, NA.958, NA.959, NA.960, NA.961, NA.962, NA.
+963, NA.964, NA.965, NA.966, NA.967, NA.968, NA.969, NA.970, NA.971, NA.972, NA.
+973, NA.974, NA.975, NA.976, NA.977, NA.978, NA.979, NA.980, NA.981, NA.982, NA.
+983, NA.984, NA.985, NA.986, NA.987, NA.988, NA.989, NA.990, NA.991, NA.992, NA.
+993, NA.994, NA.995, NA.996, NA.997, NA.998, NA.999, NA.1000, NA.1001, NA.1002,
+NA.1003, NA.1004, NA.1005, NA.1006, NA.1007, NA.1008, NA.1009, NA.1010, NA.1011,
+NA.1012, NA.1013, NA.1014, NA.1015, NA.1016, NA.1017, NA.1018, NA.1019, NA.1020,
+NA.1021, NA.1022, NA.1023, NA.1024, NA.1025, NA.1026, NA.1027, NA.1028, NA.1029,
+NA.1030,</code></pre>
+<pre><code>[1] 11951</code></pre>
+</div>
+<div id="genotyping-error" class="section level4">
+<h4>Genotyping Error</h4>
+</div>
+<div id="total" class="section level4">
+<h4>Total</h4>
+<pre><code>[1] 20751</code></pre>
+<pre><code>[1] 20727</code></pre>
+<p>List of markers with errors can be found <a href="bad_markers_allqc.html">here</a></p>
+</div>
+</div>
+<div id="array-intensities" class="section level3">
+<h3>Array Intensities</h3>
+<p>Figures for all SNPs that are will be removed are found <a href="array_intensities_bad.markers_allqc.html">here</a></p>
+<pre class="r"><code>#missing in at least 10% of the samples
+
+
+gm_allqc2 &lt;- drop_markers(gm_samqc, bad_markers$marker)</code></pre>
+<pre><code>Warning in drop_markers(gm_samqc, bad_markers$marker): Some markers not found:
+NA, NA.1, NA.2, NA.3, NA.4, NA.5, NA.6, NA.7, NA.8, NA.9, NA.10, NA.11, NA.12,
+NA.13, NA.14, NA.15, NA.16, NA.17, NA.18, NA.19, NA.20, NA.21, NA.22, NA.23, NA.
+24, NA.25, NA.26, NA.27, NA.28, NA.29, NA.30, NA.31, NA.32, NA.33, NA.34, NA.
+35, NA.36, NA.37, NA.38, NA.39, NA.40, NA.41, NA.42, NA.43, NA.44, NA.45, NA.
+46, NA.47, NA.48, NA.49, NA.50, NA.51, NA.52, NA.53, NA.54, NA.55, NA.56, NA.57,
+NA.58, NA.59, NA.60, NA.61, NA.62, NA.63, NA.64, NA.65, NA.66, NA.67, NA.68, NA.
+69, NA.70, NA.71, NA.72, NA.73, NA.74, NA.75, NA.76, NA.77, NA.78, NA.79, NA.80,
+NA.81, NA.82, NA.83, NA.84, NA.85, NA.86, NA.87, NA.88, NA.89, NA.90, NA.91, NA.
+92, NA.93, NA.94, NA.95, NA.96, NA.97, NA.98, NA.99, NA.100, NA.101, NA.102, NA.
+103, NA.104, NA.105, NA.106, NA.107, NA.108, NA.109, NA.110, NA.111, NA.112, NA.
+113, NA.114, NA.115, NA.116, NA.117, NA.118, NA.119, NA.120, NA.121, NA.122, NA.
+123, NA.124, NA.125, NA.126, NA.127, NA.128, NA.129, NA.130, NA.131, NA.132, NA.
+133, NA.134, NA.135, NA.136, NA.137, NA.138, NA.139, NA.140, NA.141, NA.142, NA.
+143, NA.144, NA.145, NA.146, NA.147, NA.148, NA.149, NA.150, NA.151, NA.152, NA.
+153, NA.154, NA.155, NA.156, NA.157, NA.158, NA.159, NA.160, NA.161, NA.162, NA.
+163, NA.164, NA.165, NA.166, NA.167, NA.168, NA.169, NA.170, NA.171, NA.172, NA.
+173, NA.174, NA.175, NA.176, NA.177, NA.178, NA.179, NA.180, NA.181, NA.182, NA.
+183, NA.184, NA.185, NA.186, NA.187, NA.188, NA.189, NA.190, NA.191, NA.192, NA.
+193, NA.194, NA.195, NA.196, NA.197, NA.198, NA.199, NA.200, NA.201, NA.202, NA.
+203, NA.204, NA.205, NA.206, NA.207, NA.208, NA.209, NA.210, NA.211, NA.212, NA.
+213, NA.214, NA.215, NA.216, NA.217, NA.218, NA.219, NA.220, NA.221, NA.222, NA.
+223, NA.224, NA.225, NA.226, NA.227, NA.228, NA.229, NA.230, NA.231, NA.232, NA.
+233, NA.234, NA.235, NA.236, NA.237, NA.238, NA.239, NA.240, NA.241, NA.242, NA.
+243, NA.244, NA.245, NA.246, NA.247, NA.248, NA.249, NA.250, NA.251, NA.252, NA.
+253, NA.254, NA.255, NA.256, NA.257, NA.258, NA.259, NA.260, NA.261, NA.262, NA.
+263, NA.264, NA.265, NA.266, NA.267, NA.268, NA.269, NA.270, NA.271, NA.272, NA.
+273, NA.274, NA.275, NA.276, NA.277, NA.278, NA.279, NA.280, NA.281, NA.282, NA.
+283, NA.284, NA.285, NA.286, NA.287, NA.288, NA.289, NA.290, NA.291, NA.292, NA.
+293, NA.294, NA.295, NA.296, NA.297, NA.298, NA.299, NA.300, NA.301, NA.302, NA.
+303, NA.304, NA.305, NA.306, NA.307, NA.308, NA.309, NA.310, NA.311, NA.312, NA.
+313, NA.314, NA.315, NA.316, NA.317, NA.318, NA.319, NA.320, NA.321, NA.322, NA.
+323, NA.324, NA.325, NA.326, NA.327, NA.328, NA.329, NA.330, NA.331, NA.332, NA.
+333, NA.334, NA.335, NA.336, NA.337, NA.338, NA.339, NA.340, NA.341, NA.342, NA.
+343, NA.344, NA.345, NA.346, NA.347, NA.348, NA.349, NA.350, NA.351, NA.352, NA.
+353, NA.354, NA.355, NA.356, NA.357, NA.358, NA.359, NA.360, NA.361, NA.362, NA.
+363, NA.364, NA.365, NA.366, NA.367, NA.368, NA.369, NA.370, NA.371, NA.372, NA.
+373, NA.374, NA.375, NA.376, NA.377, NA.378, NA.379, NA.380, NA.381, NA.382, NA.
+383, NA.384, NA.385, NA.386, NA.387, NA.388, NA.389, NA.390, NA.391, NA.392, NA.
+393, NA.394, NA.395, NA.396, NA.397, NA.398, NA.399, NA.400, NA.401, NA.402, NA.
+403, NA.404, NA.405, NA.406, NA.407, NA.408, NA.409, NA.410, NA.411, NA.412, NA.
+413, NA.414, NA.415, NA.416, NA.417, NA.418, NA.419, NA.420, NA.421, NA.422, NA.
+423, NA.424, NA.425, NA.426, NA.427, NA.428, NA.429, NA.430, NA.431, NA.432, NA.
+433, NA.434, NA.435, NA.436, NA.437, NA.438, NA.439, NA.440, NA.441, NA.442, NA.
+443, NA.444, NA.445, NA.446, NA.447, NA.448, NA.449, NA.450, NA.451, NA.452, NA.
+453, NA.454, NA.455, NA.456, NA.457, NA.458, NA.459, NA.460, NA.461, NA.462, NA.
+463, NA.464, NA.465, NA.466, NA.467, NA.468, NA.469, NA.470, NA.471, NA.472, NA.
+473, NA.474, NA.475, NA.476, NA.477, NA.478, NA.479, NA.480, NA.481, NA.482, NA.
+483, NA.484, NA.485, NA.486, NA.487, NA.488, NA.489, NA.490, NA.491, NA.492, NA.
+493, NA.494, NA.495, NA.496, NA.497, NA.498, NA.499, NA.500, NA.501, NA.502, NA.
+503, NA.504, NA.505, NA.506, NA.507, NA.508, NA.509, NA.510, NA.511, NA.512, NA.
+513, NA.514, NA.515, NA.516, NA.517, NA.518, NA.519, NA.520, NA.521, NA.522, NA.
+523, NA.524, NA.525, NA.526, NA.527, NA.528, NA.529, NA.530, NA.531, NA.532, NA.
+533, NA.534, NA.535, NA.536, NA.537, NA.538, NA.539, NA.540, NA.541, NA.542, NA.
+543, NA.544, NA.545, NA.546, NA.547, NA.548, NA.549, NA.550, NA.551, NA.552, NA.
+553, NA.554, NA.555, NA.556, NA.557, NA.558, NA.559, NA.560, NA.561, NA.562, NA.
+563, NA.564, NA.565, NA.566, NA.567, NA.568, NA.569, NA.570, NA.571, NA.572, NA.
+573, NA.574, NA.575, NA.576, NA.577, NA.578, NA.579, NA.580, NA.581, NA.582, NA.
+583, NA.584, NA.585, NA.586, NA.587, NA.588, NA.589, NA.590, NA.591, NA.592, NA.
+593, NA.594, NA.595, NA.596, NA.597, NA.598, NA.599, NA.600, NA.601, NA.602, NA.
+603, NA.604, NA.605, NA.606, NA.607, NA.608, NA.609, NA.610, NA.611, NA.612, NA.
+613, NA.614, NA.615, NA.616, NA.617, NA.618, NA.619, NA.620, NA.621, NA.622, NA.
+623, NA.624, NA.625, NA.626, NA.627, NA.628, NA.629, NA.630, NA.631, NA.632, NA.
+633, NA.634, NA.635, NA.636, NA.637, NA.638, NA.639, NA.640, NA.641, NA.642, NA.
+643, NA.644, NA.645, NA.646, NA.647, NA.648, NA.649, NA.650, NA.651, NA.652, NA.
+653, NA.654, NA.655, NA.656, NA.657, NA.658, NA.659, NA.660, NA.661, NA.662, NA.
+663, NA.664, NA.665, NA.666, NA.667, NA.668, NA.669, NA.670, NA.671, NA.672, NA.
+673, NA.674, NA.675, NA.676, NA.677, NA.678, NA.679, NA.680, NA.681, NA.682, NA.
+683, NA.684, NA.685, NA.686, NA.687, NA.688, NA.689, NA.690, NA.691, NA.692, NA.
+693, NA.694, NA.695, NA.696, NA.697, NA.698, NA.699, NA.700, NA.701, NA.702, NA.
+703, NA.704, NA.705, NA.706, NA.707, NA.708, NA.709, NA.710, NA.711, NA.712, NA.
+713, NA.714, NA.715, NA.716, NA.717, NA.718, NA.719, NA.720, NA.721, NA.722, NA.
+723, NA.724, NA.725, NA.726, NA.727, NA.728, NA.729, NA.730, NA.731, NA.732, NA.
+733, NA.734, NA.735, NA.736, NA.737, NA.738, NA.739, NA.740, NA.741, NA.742, NA.
+743, NA.744, NA.745, NA.746, NA.747, NA.748, NA.749, NA.750, NA.751, NA.752, NA.
+753, NA.754, NA.755, NA.756, NA.757, NA.758, NA.759, NA.760, NA.761, NA.762, NA.
+763, NA.764, NA.765, NA.766, NA.767, NA.768, NA.769, NA.770, NA.771, NA.772, NA.
+773, NA.774, NA.775, NA.776, NA.777, NA.778, NA.779, NA.780, NA.781, NA.782, NA.
+783, NA.784, NA.785, NA.786, NA.787, NA.788, NA.789, NA.790, NA.791, NA.792, NA.
+793, NA.794, NA.795, NA.796, NA.797, NA.798, NA.799, NA.800, NA.801, NA.802, NA.
+803, NA.804, NA.805, NA.806, NA.807, NA.808, NA.809, NA.810, NA.811, NA.812, NA.
+813, NA.814, NA.815, NA.816, NA.817, NA.818, NA.819, NA.820, NA.821, NA.822, NA.
+823, NA.824, NA.825, NA.826, NA.827, NA.828, NA.829, NA.830, NA.831, NA.832, NA.
+833, NA.834, NA.835, NA.836, NA.837, NA.838, NA.839, NA.840, NA.841, NA.842, NA.
+843, NA.844, NA.845, NA.846, NA.847, NA.848, NA.849, NA.850, NA.851, NA.852, NA.
+853, NA.854, NA.855, NA.856, NA.857, NA.858, NA.859, NA.860, NA.861, NA.862, NA.
+863, NA.864, NA.865, NA.866, NA.867, NA.868, NA.869, NA.870, NA.871, NA.872, NA.
+873, NA.874, NA.875, NA.876, NA.877, NA.878, NA.879, NA.880, NA.881, NA.882, NA.
+883, NA.884, NA.885, NA.886, NA.887, NA.888, NA.889, NA.890, NA.891, NA.892, NA.
+893, NA.894, NA.895, NA.896, NA.897, NA.898, NA.899, NA.900, NA.901, NA.902, NA.
+903, NA.904, NA.905, NA.906, NA.907, NA.908, NA.909, NA.910, NA.911, NA.912, NA.
+913, NA.914, NA.915, NA.916, NA.917, NA.918, NA.919, NA.920, NA.921, NA.922, NA.
+923, NA.924, NA.925, NA.926, NA.927, NA.928, NA.929, NA.930, NA.931, NA.932, NA.
+933, NA.934, NA.935, NA.936, NA.937, NA.938, NA.939, NA.940, NA.941, NA.942, NA.
+943, NA.944, NA.945, NA.946, NA.947, NA.948, NA.949, NA.950, NA.951, NA.952, NA.
+953, NA.954, NA.955, NA.956, NA.957, NA.958, NA.959, NA.960, NA.961, NA.962, NA.
+963, NA.964, NA.965, NA.966, NA.967, NA.968, NA.969, NA.970, NA.971, NA.972, NA.
+973, NA.974, NA.975, NA.976, NA.977, NA.978, NA.979, NA.980, NA.981, NA.982, NA.
+983, NA.984, NA.985, NA.986, NA.987, NA.988, NA.989, NA.990, NA.991, NA.992, NA.
+993, NA.994, NA.995, NA.996, NA.997, NA.998, NA.999, NA.1000, NA.1001, NA.1002,
+NA.1003, NA.1004, NA.1005, NA.1006, NA.1007, NA.1008, NA.1009, NA.1010, NA.1011,
+NA.1012, NA.1013, NA.1014, NA.1015, NA.1016, NA.1017, NA.1018, NA.1019, NA.1020,
+NA.1021, NA.1022, NA.1023, NA.1024, NA.1025, NA.1026, NA.1027, NA.1028, NA.1029,
+NA.1030,</code></pre>
+<pre class="r"><code>gm_allqc &lt;- drop_nullmarkers(gm_allqc2)</code></pre>
+<pre><code>Dropping 5330 noninformative markers</code></pre>
+<pre class="r"><code>gm_allqc</code></pre>
+<pre><code>Object of class cross2 (crosstype &quot;do&quot;)
+
+Total individuals               818
+No. genotyped individuals       818
+No. phenotyped individuals      818
+No. with both geno &amp; pheno      818
+
+No. phenotypes                    1
+No. covariates                    3
+No. phenotype covariates          0
+
+No. chromosomes                  20
+Total markers                112822
+
+No. markers by chr:
+   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16 
+8544 8649 6470 6601 6583 6549 6354 5657 5860 5430 6327 5180 5290 5037 4519 4368 
+  17   18   19    X 
+4305 3993 3090 4016 </code></pre>
+<pre class="r"><code>save(gm_allqc, file = &quot;data/gm_allqc_all.RData&quot;)</code></pre>
+<p>After full qc (<a href="2.2_sample_bqc.html">sample</a> $ SNP), we ran all checks <a href="2.4.1_afterqc.html">again</a> to see if data improved for <code>R/qtl2</code> analysis.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.2 (2019-12-12)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.7
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] fst_0.9.2        knitr_1.28       kableExtra_1.1.0 mclust_5.4.6    
+ [5] ggrepel_0.8.2    ggplot2_3.3.2    qtlcharts_0.11-6 qtl2_0.22       
+ [9] broman_0.70-4    workflowr_1.6.2 
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.0.0  xfun_0.13         purrr_0.3.4       colorspace_1.4-1 
+ [5] vctrs_0.3.1       viridisLite_0.3.0 htmltools_0.4.0   yaml_2.2.1       
+ [9] blob_1.2.1        rlang_0.4.6       later_1.0.0       pillar_1.4.4     
+[13] glue_1.4.1        withr_2.2.0       DBI_1.1.0         bit64_0.9-7      
+[17] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     gtable_0.3.0     
+[21] rvest_0.3.5       memoise_1.1.0     evaluate_0.14     httpuv_1.5.2     
+[25] parallel_3.6.2    highr_0.8         Rcpp_1.0.4.6      readr_1.3.1      
+[29] promises_1.1.0    scales_1.1.1      backports_1.1.7   webshot_0.5.2    
+[33] fs_1.4.1          bit_1.1-15.2      hms_0.5.3         digest_0.6.25    
+[37] stringi_1.4.6     dplyr_0.8.5       grid_3.6.2        rprojroot_1.3-2  
+[41] tools_3.6.2       magrittr_1.5      RSQLite_2.2.0     tibble_3.0.1     
+[45] crayon_1.3.4      whisker_0.4       pkgconfig_2.0.3   ellipsis_0.3.1   
+[49] data.table_1.12.8 xml2_1.3.1        assertthat_0.2.1  rmarkdown_2.1    
+[53] httr_1.4.1        rstudioapi_0.11   qtl_1.46-2        R6_2.4.1         
+[57] git2r_0.26.1      compiler_3.6.2   </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
