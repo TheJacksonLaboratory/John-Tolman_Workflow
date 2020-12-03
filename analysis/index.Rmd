@@ -11,16 +11,16 @@ output:
 ### Project At A Glance
 * Samples: b6.v265d
 	+ [Total Samples: 202](0.1_samples_batch_b6.v265d.html)
-	+ [Total Samples (After Removing Problematic Samples): 185](0.1_samples_batch_b6.v265d_aqc.html)
+	+ [Total Samples (Ater Correcting For Problematic Samples): 185](0.1_samples_batch_b6.v265d_aqc.html)
 * Samples: b6.q105x
 	+ [Total Samples: 383](0.1_samples_batch_b6.q105x.html)
-	+ [Total Samples (After Removing Problematic Samples): 375](0.1_samples_batch_b6.q105x_aqc.html)
+	+ [Total Samples (Ater Correcting For Problematic Samples): 375](0.1_samples_batch_b6.q105x_aqc.html)
 * Samples: d2.q105x
 	+ [Total Samples: 134](0.1_samples_batch_d2.q105x.html)
-	+ [Total Samples (After Removing Problematic Samples): 131](0.1_samples_batch_d2.q105x_aqc.html)
+	+ [Total Samples (Ater Correcting For Problematic Samples): 131](0.1_samples_batch_d2.q105x_aqc.html)
 * Samples: 129Sj.v265d
 	+ [Total Samples: 136](0.1_samples_batch_129Sj.v265d.html)
-	+ [Total Samples (After Removing Problematic Samples): 127](0.1_samples_batch_129Sj.v265d_aqc.html)
+	+ [Total Samples (Ater Correcting For Problematic Samples): 127](0.1_samples_batch_129Sj.v265d_aqc.html)
 
 ### Haplotype Phasing
 * Before QC
@@ -28,11 +28,11 @@ output:
 	+ [b6.q105x](0.2_haplotype_comparison_bqc_b6.q105x.html)
 	+ [d2.q105x](0.2_haplotype_comparison_bqc_d2.q105x.html)
 	+ [129Sj.v265d](0.2_haplotype_comparison_bqc_129Sj.v265d.html)
-* After QC
-	+ [b6.v265d](0.2_haplotype_comparison_bqc_b6.v265d.html)
-	+ [b6.q105x](0.2_haplotype_comparison_bqc_b6.q105x.html)
-	+ [d2.q105x](0.2_haplotype_comparison_bqc_d2.q105x.html)
-	+ [129Sj.v265d](0.2_haplotype_comparison_bqc_129Sj.v265d.html)
+* Ater Correcting For Problematic Samples
+	+ [b6.v265d](0.2_haplotype_comparison_aqc_b6.v265d.html)
+	+ [b6.q105x](0.2_haplotype_comparison_aqc_b6.q105x.html)
+	+ [d2.q105x](0.2_haplotype_comparison_aqc_d2.q105x.html)
+	+ [129Sj.v265d](0.2_haplotype_comparison_aqc_129Sj.v265d.html)
 
 ### 1. Phenotype QC
 * Phenotypes - Max_IOP
@@ -49,12 +49,11 @@ output:
 		+ [d2.q105x](2.1_sample_bqc_d2.q105x.html)
 		+ [129Sj.v265d](2.1_sample_bqc_129Sj.v265d.html)
 		+ [all samples](2.1_sample_bqc_all.samples.html)
-	+ Ater Removing Problematic Samples
-		+ [b6.v265d](2.1_sample_bqc_b6.v265d.html)
-		+ [b6.q105x](2.1_sample_bqc_b6.q105x.html)
-		+ [d2.q105x](2.1_sample_bqc_d2.q105x.html)
-		+ [129Sj.v265d](2.1_sample_bqc_129Sj.v265d.html)
-		+ [all samples](2.1_sample_bqc_all.samples.html)
+	+ Ater Correcting For Problematic Samples
+		+ [b6.v265d](2.1_sample_bqc_b6.v265d_aqc.html)
+		+ [b6.q105x](2.1_sample_bqc_b6.q105x_aqc.html)
+		+ [d2.q105x](2.1_sample_bqc_d2.q105x_aqc.html)
+		+ [129Sj.v265d](2.1_sample_bqc_129Sj.v265d_aqc.html)
 * Step 2: SNP QC (Monomorphic, Genotype Error & Missing Data)
 	+ Before QC
 		+ [b6.v265d](2.2.1_snp_qc_b6.v265d.html)
@@ -62,12 +61,11 @@ output:
 		+ [d2.q105x](2.2.1_snp_qc_d2.q105x.html)
 		+ [129Sj.v265d](2.2.1_snp_qc_129Sj.v265d.html)
 		+ [all samples](2.2.1_snp_qc_all.samples.html)
-	+ Ater Removing Problematic Samples
-		+ [b6.v265d](2.2.1_snp_qc_b6.v265d.html)
-		+ [b6.q105x](2.2.1_snp_qc_b6.q105x.html)
-		+ [d2.q105x](2.2.1_snp_qc_d2.q105x.html)
-		+ [129Sj.v265d](2.2.1_snp_qc_129Sj.v265d.html)
-		+ [all samples](2.2.1_snp_qc_all.samples.html)
+	+ Ater Correcting For Problematic Samples
+		+ [b6.v265d](2.2.1_snp_qc_b6.v265d_aqc.html)
+		+ [b6.q105x](2.2.1_snp_qc_b6.q105x_aqc.html)
+		+ [d2.q105x](2.2.1_snp_qc_d2.q105x_aqc.html)
+		+ [129Sj.v265d](2.2.1_snp_qc_129Sj.v265d_aqc.html)
 * Step 3: Effect of Data Cleaning
 	+ Before QC
 		+ [b6.v265d](2.3.1_afterqc_b6.v265d.html)
@@ -75,25 +73,13 @@ output:
 		+ [d2.q105x](2.3.1_afterqc_d2.q105x.html)
 		+ [129Sj.v265d](2.3.1_afterqc_129Sj.v265d.html)
 		+ [all samples](2.3.1_afterqc_all.samples.html)
-	+ Ater Removing Problematic Samples
-		+ [b6.v265d](2.3.1_afterqc_b6.v265d.html)
-		+ [b6.q105x](2.3.1_afterqc_b6.q105x.html)
-		+ [d2.q105x](2.3.1_afterqc_d2.q105x.html)
-		+ [129Sj.v265d](2.3.1_afterqc_129Sj.v265d.html)
-		+ [all samples](2.3.1_afterqc_all.samples.html)
+	+ Ater Correcting For Problematic Samples
+		+ [b6.v265d](2.3.1_afterqc_b6.v265d_aqc.html)
+		+ [b6.q105x](2.3.1_afterqc_b6.q105x_aqc.html)
+		+ [d2.q105x](2.3.1_afterqc_d2.q105x_aqc.html)
+		+ [129Sj.v265d](2.3.1_afterqc_129Sj.v265d_aqc.html)
 * Step 4: Preparing Files for QTL Analysis
-	+ Before QC
-		+ [b6.v265d](2.4.1_preparing_files_b6.v265d.html)
-		+ [b6.q105x](2.4.1_preparing_files_b6.q105x.html)
-		+ [d2.q105x](2.4.1_preparing_files_d2.q105x.html)
-		+ [129Sj.v265d](2.4.1_preparing_files_129Sj.v265d.html)
-		+ [all samples](2.4.1_preparing_files.samples.html)
-	+ Ater Removing Problematic Samples
-		+ [b6.v265d](2.4.1_preparing_files_b6.v265d.html)
-		+ [b6.q105x](2.4.1_preparing_files_b6.q105x.html)
-		+ [d2.q105x](2.4.1_preparing_files_d2.q105x.html)
-		+ [129Sj.v265d](2.4.1_preparing_files_129Sj.v265d.html)
-		+ [all samples](2.4.1_preparing_files.samples.html)
+
 
 ### 3. QTL Analysis
 * Step 1: Recombination Block Size & Founder Proportions
@@ -102,8 +88,3 @@ output:
 * Step 4: QTL Permutation (`R/qtl2`)
 * Step 5: QTL Best Linear Unbiased Prediction (BLUP) (`R/qtl2`)
 * Step 6: Results from `R/qtl2` analysis [Raw Data]
-	+ [b6.v265d](2.6.1_preparing_files_b6.v265d.html)
-	+ [b6.q105x](2.6.1_preparing_files_b6.q105x.html)
-	+ [d2.q105x](2.6.1_preparing_files_d2.q105x.html)
-	+ [129Sj.v265d](2.6.1_preparing_files_129Sj.v265d.html)
-	+ [all samples](2.6.1_preparing_files.samples.html)
