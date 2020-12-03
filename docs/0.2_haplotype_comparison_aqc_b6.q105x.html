@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Belinda Cornes" />
+
+<meta name="date" content="2020-12-03" />
+
+<title>Haplotype Phasing Before QC [b6.q105x]</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">John/Tolman Workflow</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Haplotype Phasing Before QC [b6.q105x]</h1>
+<h4 class="author">Belinda Cornes</h4>
+<h4 class="date">2020-12-03</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#loading-project">Loading Project</a></li>
+<li><a href="#phased-plots">Phased Plots</a></li>
+</ul>
+</div>
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-12-03
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>John-Toleman_workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20201112code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20201112)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20201112code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20201112)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomTheJacksonLaboratoryJohnTolmanWorkflowtreea14be3cc4c327bdf2652261c3a7dfe7e49660524targetblanka14be3ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/tree/a14be3cc4c327bdf2652261c3a7dfe7e49660524" target="_blank">a14be3c</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomTheJacksonLaboratoryJohnTolmanWorkflowtreea14be3cc4c327bdf2652261c3a7dfe7e49660524targetblanka14be3ca" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/tree/a14be3cc4c327bdf2652261c3a7dfe7e49660524" target="_blank">a14be3c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    analysis/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/0.2_haplotype_comparison_bqc_129Sj.v265d_aqc.Rmd
+    Untracked:  analysis/0.2_haplotype_comparison_bqc_all.samples.Rmd.R
+    Untracked:  analysis/0.2_haplotype_comparison_bqc_b6.v265d_aqc.Rmd
+    Untracked:  analysis/1.1_phenotypes_129Sj.v265d_aqc.Rmd
+    Untracked:  analysis/1.1_phenotypes_b6.q105x_aqc.Rmd
+    Untracked:  analysis/1.1_phenotypes_b6.v265d_aqc.Rmd
+    Untracked:  analysis/1.1_phenotypes_d2.q105x_aqc.Rmd
+    Untracked:  analysis/2.1_geneseek2qtl2.R
+    Untracked:  analysis/2.1_sample_bqc_all.samples.Rmd.R
+    Untracked:  analysis/2.1_sample_bqc_all.samples_aqc.Rmd
+    Untracked:  analysis/2.2.1_snp_qc_all.samples.Rmd.R
+    Untracked:  analysis/2.2_geneseek2intensity.R
+    Untracked:  analysis/2.3.1_afterqc_all.samples.Rmd.R
+    Untracked:  analysis/index_v2.Rmd
+    Untracked:  analysis/index_v3.Rmd
+    Untracked:  data/bad_markers_all_129Sj.v265d.RData
+    Untracked:  data/bad_markers_all_129Sj.v265d_john.RData
+    Untracked:  data/bad_markers_all_all.RData
+    Untracked:  data/bad_markers_all_b6.q105x.RData
+    Untracked:  data/bad_markers_all_b6.q105x_john.RData
+    Untracked:  data/bad_markers_all_b6.v265d.RData
+    Untracked:  data/bad_markers_all_b6.v265d_john.RData
+    Untracked:  data/bad_markers_all_d2.q105x.RData
+    Untracked:  data/bad_markers_all_d2.q105x_john.RData
+    Untracked:  data/e_129Sj.v265d.RData
+    Untracked:  data/e_129Sj.v265d_john.RData
+    Untracked:  data/e_b6.q105x.RData
+    Untracked:  data/e_b6.q105x_john.RData
+    Untracked:  data/e_b6.v265d.RData
+    Untracked:  data/e_b6.v265d_john.RData
+    Untracked:  data/e_d2.q105x.RData
+    Untracked:  data/e_d2.q105x_john.RData
+    Untracked:  data/e_g_snpg_samqc_129Sj.v265d.RData
+    Untracked:  data/e_g_snpg_samqc_129Sj.v265d_john.RData
+    Untracked:  data/e_g_snpg_samqc_all.RData
+    Untracked:  data/e_g_snpg_samqc_b6.q105x.RData
+    Untracked:  data/e_g_snpg_samqc_b6.q105x_john.RData
+    Untracked:  data/e_g_snpg_samqc_b6.v265d.RData
+    Untracked:  data/e_g_snpg_samqc_b6.v265d_john.RData
+    Untracked:  data/e_g_snpg_samqc_d2.q105x.RData
+    Untracked:  data/e_g_snpg_samqc_d2.q105x_john.RData
+    Untracked:  data/e_qc_129Sj.v265d.RData
+    Untracked:  data/e_qc_129Sj.v265d_john.RData
+    Untracked:  data/e_qc_b6.q105x.RData
+    Untracked:  data/e_qc_b6.q105x_john.RData
+    Untracked:  data/e_qc_b6.v265d.RData
+    Untracked:  data/e_qc_b6.v265d_john.RData
+    Untracked:  data/e_qc_d2.q105x.RData
+    Untracked:  data/e_qc_d2.q105x_john.RData
+    Untracked:  data/errors_ind.RData
+    Untracked:  data/errors_ind_129Sj.v265d.RData
+    Untracked:  data/errors_ind_129Sj.v265d_john.RData
+    Untracked:  data/errors_ind_b6.q105x.RData
+    Untracked:  data/errors_ind_b6.q105x_john.RData
+    Untracked:  data/errors_ind_b6.v265d.RData
+    Untracked:  data/errors_ind_b6.v265d_john.RData
+    Untracked:  data/errors_ind_d2.q105x.RData
+    Untracked:  data/errors_ind_d2.q105x_john.RData
+    Untracked:  data/errors_ind_qc_129Sj.v265d.RData
+    Untracked:  data/errors_ind_qc_129Sj.v265d_john.RData
+    Untracked:  data/errors_ind_qc_b6.q105x.RData
+    Untracked:  data/errors_ind_qc_b6.q105x_john.RData
+    Untracked:  data/errors_ind_qc_b6.v265d.RData
+    Untracked:  data/errors_ind_qc_b6.v265d_john.RData
+    Untracked:  data/errors_ind_qc_d2.q105x.RData
+    Untracked:  data/errors_ind_qc_d2.q105x_john.RData
+    Untracked:  data/genotype_errors_marker_129Sj.v265d.RData
+    Untracked:  data/genotype_errors_marker_129Sj.v265d_john.RData
+    Untracked:  data/genotype_errors_marker_b6.q105x.RData
+    Untracked:  data/genotype_errors_marker_b6.q105x_john.RData
+    Untracked:  data/genotype_errors_marker_b6.v265d.RData
+    Untracked:  data/genotype_errors_marker_b6.v265d_john.RData
+    Untracked:  data/genotype_errors_marker_d2.q105x.RData
+    Untracked:  data/genotype_errors_marker_d2.q105x_john.RData
+    Untracked:  data/genotype_errors_marker_qc_129Sj.v265d.RData
+    Untracked:  data/genotype_errors_marker_qc_129Sj.v265d_john.RData
+    Untracked:  data/genotype_errors_marker_qc_b6.q105x.RData
+    Untracked:  data/genotype_errors_marker_qc_b6.q105x_john.RData
+    Untracked:  data/genotype_errors_marker_qc_b6.v265d.RData
+    Untracked:  data/genotype_errors_marker_qc_b6.v265d_john.RData
+    Untracked:  data/genotype_errors_marker_qc_d2.q105x.RData
+    Untracked:  data/genotype_errors_marker_qc_d2.q105x_john.RData
+    Untracked:  data/genotype_freq_marker_129Sj.v265d.RData
+    Untracked:  data/genotype_freq_marker_129Sj.v265d_john.RData
+    Untracked:  data/genotype_freq_marker_all.RData
+    Untracked:  data/genotype_freq_marker_b6.q105x.RData
+    Untracked:  data/genotype_freq_marker_b6.q105x_john.RData
+    Untracked:  data/genotype_freq_marker_b6.v265d.RData
+    Untracked:  data/genotype_freq_marker_b6.v265d_john.RData
+    Untracked:  data/genotype_freq_marker_d2.q105x.RData
+    Untracked:  data/genotype_freq_marker_d2.q105x_john.RData
+    Untracked:  data/genotype_freq_marker_qc_129Sj.v265d.RData
+    Untracked:  data/genotype_freq_marker_qc_129Sj.v265d_john.RData
+    Untracked:  data/genotype_freq_marker_qc_all.RData
+    Untracked:  data/genotype_freq_marker_qc_b6.q105x.RData
+    Untracked:  data/genotype_freq_marker_qc_b6.q105x_john.RData
+    Untracked:  data/genotype_freq_marker_qc_b6.v265d.RData
+    Untracked:  data/genotype_freq_marker_qc_b6.v265d_john.RData
+    Untracked:  data/genotype_freq_marker_qc_d2.q105x.RData
+    Untracked:  data/genotype_freq_marker_qc_d2.q105x_john.RData
+    Untracked:  data/gm_allqc_129Sj.v265d.RData
+    Untracked:  data/gm_allqc_129Sj.v265d_john.RData
+    Untracked:  data/gm_allqc_all.RData
+    Untracked:  data/gm_allqc_b6.q105x.RData
+    Untracked:  data/gm_allqc_b6.q105x_john.RData
+    Untracked:  data/gm_allqc_b6.v265d.RData
+    Untracked:  data/gm_allqc_b6.v265d_john.RData
+    Untracked:  data/gm_allqc_d2.q105x.RData
+    Untracked:  data/gm_allqc_d2.q105x_john.RData
+    Untracked:  data/gm_samqc_129Sj.v265d.RData
+    Untracked:  data/gm_samqc_129Sj.v265d_john.RData
+    Untracked:  data/gm_samqc_all.RData
+    Untracked:  data/gm_samqc_b6.q105x.RData
+    Untracked:  data/gm_samqc_b6.q105x_john.RData
+    Untracked:  data/gm_samqc_b6.v265d.RData
+    Untracked:  data/gm_samqc_b6.v265d_john.RData
+    Untracked:  data/gm_samqc_d2.q105x.RData
+    Untracked:  data/gm_samqc_d2.q105x_john.RData
+    Untracked:  data/m_129Sj.v265d.RData
+    Untracked:  data/m_129Sj.v265d_john.RData
+    Untracked:  data/m_b6.q105x.RData
+    Untracked:  data/m_b6.q105x_john.RData
+    Untracked:  data/m_b6.v265d.RData
+    Untracked:  data/m_b6.v265d_john.RData
+    Untracked:  data/m_d2.q105x.RData
+    Untracked:  data/m_d2.q105x_john.RData
+    Untracked:  data/m_qc_129Sj.v265d.RData
+    Untracked:  data/m_qc_129Sj.v265d_john.RData
+    Untracked:  data/m_qc_b6.q105x.RData
+    Untracked:  data/m_qc_b6.q105x_john.RData
+    Untracked:  data/m_qc_b6.v265d.RData
+    Untracked:  data/m_qc_b6.v265d_john.RData
+    Untracked:  data/m_qc_d2.q105x.RData
+    Untracked:  data/m_qc_d2.q105x_john.RData
+    Untracked:  data/nxo_129Sj.v265d.RData
+    Untracked:  data/nxo_129Sj.v265d_john.RData
+    Untracked:  data/nxo_b6.q105x.RData
+    Untracked:  data/nxo_b6.q105x_john.RData
+    Untracked:  data/nxo_b6.v265d.RData
+    Untracked:  data/nxo_b6.v265d_john.RData
+    Untracked:  data/nxo_d2.q105x.RData
+    Untracked:  data/nxo_d2.q105x_john.RData
+    Untracked:  data/nxo_qc_129Sj.v265d.RData
+    Untracked:  data/nxo_qc_129Sj.v265d_john.RData
+    Untracked:  data/nxo_qc_b6.q105x.RData
+    Untracked:  data/nxo_qc_b6.q105x_john.RData
+    Untracked:  data/nxo_qc_b6.v265d.RData
+    Untracked:  data/nxo_qc_b6.v265d_john.RData
+    Untracked:  data/nxo_qc_d2.q105x.RData
+    Untracked:  data/nxo_qc_d2.q105x_john.RData
+    Untracked:  data/percent_missing_id_129Sj.v265d.RData
+    Untracked:  data/percent_missing_id_129Sj.v265d_john.RData
+    Untracked:  data/percent_missing_id_all.RData
+    Untracked:  data/percent_missing_id_b6.q105x.RData
+    Untracked:  data/percent_missing_id_b6.q105x_john.RData
+    Untracked:  data/percent_missing_id_b6.v265d.RData
+    Untracked:  data/percent_missing_id_b6.v265d_john.RData
+    Untracked:  data/percent_missing_id_d2.q105x.RData
+    Untracked:  data/percent_missing_id_d2.q105x_john.RData
+    Untracked:  data/percent_missing_id_qc_129Sj.v265d.RData
+    Untracked:  data/percent_missing_id_qc_129Sj.v265d_john.RData
+    Untracked:  data/percent_missing_id_qc_all.RData
+    Untracked:  data/percent_missing_id_qc_b6.q105x.RData
+    Untracked:  data/percent_missing_id_qc_b6.q105x_john.RData
+    Untracked:  data/percent_missing_id_qc_b6.v265d.RData
+    Untracked:  data/percent_missing_id_qc_b6.v265d_john.RData
+    Untracked:  data/percent_missing_id_qc_d2.q105x.RData
+    Untracked:  data/percent_missing_id_qc_d2.q105x_john.RData
+    Untracked:  data/percent_missing_marker.RData
+    Untracked:  data/percent_missing_marker_129Sj.v265d.RData
+    Untracked:  data/percent_missing_marker_129Sj.v265d_john.RData
+    Untracked:  data/percent_missing_marker_all.RData
+    Untracked:  data/percent_missing_marker_b6.q105x.RData
+    Untracked:  data/percent_missing_marker_b6.q105x_john.RData
+    Untracked:  data/percent_missing_marker_b6.v265d.RData
+    Untracked:  data/percent_missing_marker_b6.v265d_john.RData
+    Untracked:  data/percent_missing_marker_d2.q105x.RData
+    Untracked:  data/percent_missing_marker_d2.q105x_john.RData
+    Untracked:  data/percent_missing_marker_qc_129Sj.v265d.RData
+    Untracked:  data/percent_missing_marker_qc_129Sj.v265d_john.RData
+    Untracked:  data/percent_missing_marker_qc_all.RData
+    Untracked:  data/percent_missing_marker_qc_b6.q105x.RData
+    Untracked:  data/percent_missing_marker_qc_b6.q105x_john.RData
+    Untracked:  data/percent_missing_marker_qc_b6.v265d.RData
+    Untracked:  data/percent_missing_marker_qc_b6.v265d_john.RData
+    Untracked:  data/percent_missing_marker_qc_d2.q105x.RData
+    Untracked:  data/percent_missing_marker_qc_d2.q105x_john.RData
+    Untracked:  data/qc_info_bad_sample_129Sj.v265d.RData
+    Untracked:  data/qc_info_bad_sample_129Sj.v265d_john.RData
+    Untracked:  data/qc_info_bad_sample_all.RData
+    Untracked:  data/qc_info_bad_sample_b6.q105x.RData
+    Untracked:  data/qc_info_bad_sample_b6.q105x_john.RData
+    Untracked:  data/qc_info_bad_sample_b6.v265d.RData
+    Untracked:  data/qc_info_bad_sample_b6.v265d_john.RData
+    Untracked:  data/qc_info_bad_sample_d2.q105x.RData
+    Untracked:  data/qc_info_bad_sample_d2.q105x_john.RData
+    Untracked:  data/summary.cg_129Sj.v265d.RData
+    Untracked:  data/summary.cg_129Sj.v265d_john.RData
+    Untracked:  data/summary.cg_all.RData
+    Untracked:  data/summary.cg_b6.q105x.RData
+    Untracked:  data/summary.cg_b6.q105x_john.RData
+    Untracked:  data/summary.cg_b6.v265d.RData
+    Untracked:  data/summary.cg_b6.v265d_john.RData
+    Untracked:  data/summary.cg_d2.q105x.RData
+    Untracked:  data/summary.cg_d2.q105x_john.RData
+    Untracked:  data/summary.cg_qc_129Sj.v265d.RData
+    Untracked:  data/summary.cg_qc_129Sj.v265d_john.RData
+    Untracked:  data/summary.cg_qc_all.RData
+    Untracked:  data/summary.cg_qc_b6.q105x.RData
+    Untracked:  data/summary.cg_qc_b6.q105x_john.RData
+    Untracked:  data/summary.cg_qc_b6.v265d.RData
+    Untracked:  data/summary.cg_qc_b6.v265d_john.RData
+    Untracked:  data/summary.cg_qc_d2.q105x.RData
+    Untracked:  data/summary.cg_qc_d2.q105x_john.RData
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_129Sj.v265d.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_129Sj.v265d_john.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_b6.q105x.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_b6.q105x_john.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_b6.v265d.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_b6.v265d_john.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_d2.q105x.pdf
+    Untracked:  output/Percent_genotype_errors_obs_vs_predicted_d2.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_129Sj.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_b6.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_b6.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_d2.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_129Sj.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_b6.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_b6.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_d2.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_129Sj.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_b6.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_b6.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_per_marker_qc_d2.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_129Sj.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_129Sj.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_all.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_b6.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_b6.q105x_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_b6.v265d.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_b6.v265d_john.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_d2.q105x.pdf
+    Untracked:  output/Percent_missing_genotype_data_qc_d2.q105x_john.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_129Sj.v265d.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_129Sj.v265d_john.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_all.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_b6.q105x.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_b6.q105x_john.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_b6.v265d.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_b6.v265d_john.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_d2.q105x.pdf
+    Untracked:  output/Proportion_matching_genotypes_before_removal_of_bad_samples_qc_d2.q105x_john.pdf
+    Untracked:  output/genotype_error_marker_129Sj.v265d.pdf
+    Untracked:  output/genotype_error_marker_129Sj.v265d_john.pdf
+    Untracked:  output/genotype_error_marker_b6.q105x.pdf
+    Untracked:  output/genotype_error_marker_b6.q105x_john.pdf
+    Untracked:  output/genotype_error_marker_b6.v265d.pdf
+    Untracked:  output/genotype_error_marker_b6.v265d_john.pdf
+    Untracked:  output/genotype_error_marker_d2.q105x.pdf
+    Untracked:  output/genotype_error_marker_d2.q105x_john.pdf
+    Untracked:  output/genotype_error_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/genotype_error_marker_qc_129Sj.v265d_john.pdf
+    Untracked:  output/genotype_error_marker_qc_b6.q105x.pdf
+    Untracked:  output/genotype_error_marker_qc_b6.q105x_john.pdf
+    Untracked:  output/genotype_error_marker_qc_b6.v265d.pdf
+    Untracked:  output/genotype_error_marker_qc_b6.v265d_john.pdf
+    Untracked:  output/genotype_error_marker_qc_d2.q105x.pdf
+    Untracked:  output/genotype_error_marker_qc_d2.q105x_john.pdf
+    Untracked:  output/genotype_frequency_marker.pdf
+    Untracked:  output/genotype_frequency_marker_129Sj.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_129Sj.v265d_john.pdf
+    Untracked:  output/genotype_frequency_marker_all.pdf
+    Untracked:  output/genotype_frequency_marker_b6.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_b6.q105x_john.pdf
+    Untracked:  output/genotype_frequency_marker_b6.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_b6.v265d_john.pdf
+    Untracked:  output/genotype_frequency_marker_d2.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_d2.q105x_john.pdf
+    Untracked:  output/genotype_frequency_marker_qc_129Sj.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_qc_129Sj.v265d_john.pdf
+    Untracked:  output/genotype_frequency_marker_qc_all.pdf
+    Untracked:  output/genotype_frequency_marker_qc_b6.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_qc_b6.q105x_john.pdf
+    Untracked:  output/genotype_frequency_marker_qc_b6.v265d.pdf
+    Untracked:  output/genotype_frequency_marker_qc_b6.v265d_john.pdf
+    Untracked:  output/genotype_frequency_marker_qc_d2.q105x.pdf
+    Untracked:  output/genotype_frequency_marker_qc_d2.q105x_john.pdf
+    Untracked:  output/number_crossover_129Sj.v265d.pdf
+    Untracked:  output/number_crossover_129Sj.v265d_john.pdf
+    Untracked:  output/number_crossover_all.pdf
+    Untracked:  output/number_crossover_b6.q105x.pdf
+    Untracked:  output/number_crossover_b6.q105x_john.pdf
+    Untracked:  output/number_crossover_b6.v265d.pdf
+    Untracked:  output/number_crossover_b6.v265d_john.pdf
+    Untracked:  output/number_crossover_d2.q105x.pdf
+    Untracked:  output/number_crossover_d2.q105x_john.pdf
+    Untracked:  output/number_crossover_qc_129Sj.v265d.pdf
+    Untracked:  output/number_crossover_qc_129Sj.v265d_john.pdf
+    Untracked:  output/number_crossover_qc_b6.q105x.pdf
+    Untracked:  output/number_crossover_qc_b6.q105x_john.pdf
+    Untracked:  output/number_crossover_qc_b6.v265d.pdf
+    Untracked:  output/number_crossover_qc_b6.v265d_john.pdf
+    Untracked:  output/number_crossover_qc_d2.q105x.pdf
+    Untracked:  output/number_crossover_qc_d2.q105x_john.pdf
+
+Unstaged changes:
+    Modified:   analysis/0.2_haplotype_comparison_bqc_129Sj.v265d.Rmd
+    Modified:   analysis/0.2_haplotype_comparison_bqc_b6.v265d.Rmd
+    Modified:   analysis/0.2_haplotype_comparison_bqc_d2.q105x.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/0.2_haplotype_comparison_aqc_b6.q105x.Rmd</code>) and HTML (<code>docs/0.2_haplotype_comparison_aqc_b6.q105x.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/a14be3cc4c327bdf2652261c3a7dfe7e49660524/analysis/0.2_haplotype_comparison_aqc_b6.q105x.Rmd" target="_blank">a14be3c</a>
+</td>
+<td>
+Belinda Cornes
+</td>
+<td>
+2020-12-03
+</td>
+<td>
+Correcting For Problematic Samples
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="loading-project" class="section level3">
+<h3>Loading Project</h3>
+<pre class="r"><code>gm &lt;- read_cross2(paste0(filepaths,&quot;qtl2/gm_sorted.json&quot;))
+
+#gm &lt;- get(load(&quot;gm_DO.RData&quot;))
+gm</code></pre>
+<pre><code>Object of class cross2 (crosstype &quot;dof1&quot;)
+
+Total individuals               375
+No. genotyped individuals       375
+No. phenotyped individuals      375
+No. with both geno &amp; pheno      375
+
+No. phenotypes                    1
+No. covariates                    3
+No. phenotype covariates          0
+
+No. chromosomes                  20
+Total markers                137302
+
+No. markers by chr:
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+10423 10441  8206  7955  8030  8130  7760  6717  6984  6631  7433  6444  6327 
+   14    15    16    17    18    19     X 
+ 6230  5534  5179  5323  4787  3676  5092 </code></pre>
+<pre class="r"><code>pr &lt;- readRDS(paste0(filepaths,&quot;Jax.Columbia_John__GigaMUGA_genoprobs_8state_sorted.rds&quot;))
+mice &lt;- ind_ids(gm)
+micelg &lt;- as.data.frame(mice)
+micelg$miceids &lt;- sapply(strsplit(as.character(micelg$mice),&#39;_&#39;,fixed=T),function(x) x[6])
+micelg &lt;- micelg[order(micelg$miceids),]
+mice &lt;- micelg$mice</code></pre>
+</div>
+<div id="phased-plots" class="section level3">
+<h3>Phased Plots</h3>
+<pre class="r"><code>for(i in mice){
+
+    print(i)
+    mouse.id &lt;- sapply(strsplit(as.character(i),&#39;_&#39;,fixed=T),function(x) x[6])
+    print(mouse.id)
+
+    gmi &lt;- gm[i, ] 
+    #map &lt;- insert_pseudomarkers(gmi$gmap, step=1)
+    #pr &lt;- calc_genoprob(gmi, map, error_prob=0.002)
+    pr.new &lt;- pr[i,]
+
+    # infer genotypes, as those with maximal marginal probability
+    m &lt;- maxmarg(pr.new, minprob = 0.2)
+
+    # guess phase
+    ph &lt;- guess_phase(gmi, m)
+
+    # plot phased genotypes
+    plot_onegeno(ph, gmi$gmap, main = paste0(i,&quot; [genoprobs]&quot;),  shift=TRUE)
+}</code></pre>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191031_448920_C4&quot;
+[1] &quot;448920&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191031_448921_F3&quot;
+[1] &quot;448921&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191031_448922_F8&quot;
+[1] &quot;448922&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191031_449216_H9&quot;
+[1] &quot;449216&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_449217_H7&quot;
+[1] &quot;449217&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191031_449218_F12&quot;
+[1] &quot;449218&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449219_H6&quot;
+[1] &quot;449219&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_449221_E5&quot;
+[1] &quot;449221&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_449222_D2&quot;
+[1] &quot;449222&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449224_H8&quot;
+[1] &quot;449224&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-10.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449225_A10&quot;
+[1] &quot;449225&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-11.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449226_E6&quot;
+[1] &quot;449226&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-12.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449227_B4&quot;
+[1] &quot;449227&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-13.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449232_A4&quot;
+[1] &quot;449232&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-14.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_449234_H9&quot;
+[1] &quot;449234&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-15.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449236_E11&quot;
+[1] &quot;449236&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-16.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449238_D5&quot;
+[1] &quot;449238&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-17.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_449239_D1&quot;
+[1] &quot;449239&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-18.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449240_B9&quot;
+[1] &quot;449240&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-19.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_449241_E7&quot;
+[1] &quot;449241&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-20.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_449242_E10&quot;
+[1] &quot;449242&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-21.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449243_C3&quot;
+[1] &quot;449243&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-22.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_449245_B5&quot;
+[1] &quot;449245&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-23.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451003_H1&quot;
+[1] &quot;451003&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-24.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451004_D11&quot;
+[1] &quot;451004&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-25.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451005_F12&quot;
+[1] &quot;451005&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-26.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451006_A8&quot;
+[1] &quot;451006&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-27.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451007_A3&quot;
+[1] &quot;451007&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-28.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451008_F3&quot;
+[1] &quot;451008&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-29.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451010_D4&quot;
+[1] &quot;451010&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-30.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451011_D8&quot;
+[1] &quot;451011&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-31.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451021_B9&quot;
+[1] &quot;451021&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-32.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451022_E9&quot;
+[1] &quot;451022&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-33.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451023_D1&quot;
+[1] &quot;451023&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-34.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451025_F10&quot;
+[1] &quot;451025&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-35.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451076_H7&quot;
+[1] &quot;451076&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-36.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451077_C6&quot;
+[1] &quot;451077&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-37.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451078_A6&quot;
+[1] &quot;451078&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-38.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451079_A5&quot;
+[1] &quot;451079&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-39.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451080_F6&quot;
+[1] &quot;451080&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-40.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451081_A11&quot;
+[1] &quot;451081&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-41.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451082_D12&quot;
+[1] &quot;451082&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-42.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451083_G2&quot;
+[1] &quot;451083&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-43.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451084_C3&quot;
+[1] &quot;451084&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-44.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451087_E8&quot;
+[1] &quot;451087&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-45.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451088_C12&quot;
+[1] &quot;451088&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-46.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451090_B7&quot;
+[1] &quot;451090&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-47.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451093_H2&quot;
+[1] &quot;451093&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-48.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451094_C8&quot;
+[1] &quot;451094&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-49.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451095_G8&quot;
+[1] &quot;451095&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-50.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451096_C4&quot;
+[1] &quot;451096&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-51.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451099_E4&quot;
+[1] &quot;451099&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-52.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451100_E8&quot;
+[1] &quot;451100&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-53.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451101_C10&quot;
+[1] &quot;451101&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-54.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451102_D6&quot;
+[1] &quot;451102&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-55.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451105_H1&quot;
+[1] &quot;451105&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-56.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451106_G12&quot;
+[1] &quot;451106&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-57.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451107_F1&quot;
+[1] &quot;451107&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-58.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451108_G1&quot;
+[1] &quot;451108&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-59.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451109_G9&quot;
+[1] &quot;451109&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-60.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451110_A7&quot;
+[1] &quot;451110&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-61.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451111_C1&quot;
+[1] &quot;451111&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-62.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451112_E6&quot;
+[1] &quot;451112&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-63.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451113_D8&quot;
+[1] &quot;451113&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-64.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451114_B10&quot;
+[1] &quot;451114&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-65.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451116_D6&quot;
+[1] &quot;451116&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-66.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451117_F4&quot;
+[1] &quot;451117&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-67.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451119_G7&quot;
+[1] &quot;451119&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-68.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451120_G9&quot;
+[1] &quot;451120&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-69.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451121_F6&quot;
+[1] &quot;451121&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-70.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451122_B1&quot;
+[1] &quot;451122&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-71.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451124_F4&quot;
+[1] &quot;451124&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-72.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451125_H4&quot;
+[1] &quot;451125&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-73.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451126_F3&quot;
+[1] &quot;451126&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-74.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451127_B11&quot;
+[1] &quot;451127&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-75.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451129_F8&quot;
+[1] &quot;451129&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-76.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451130_B4&quot;
+[1] &quot;451130&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-77.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451131_B2&quot;
+[1] &quot;451131&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-78.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451133_B8&quot;
+[1] &quot;451133&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-79.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451134_B6&quot;
+[1] &quot;451134&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-80.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451214_D4&quot;
+[1] &quot;451214&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-81.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451215_A11&quot;
+[1] &quot;451215&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-82.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451216_E1&quot;
+[1] &quot;451216&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-83.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451217_D7&quot;
+[1] &quot;451217&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-84.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451219_C1&quot;
+[1] &quot;451219&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-85.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451222_C9&quot;
+[1] &quot;451222&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-86.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451223_F7&quot;
+[1] &quot;451223&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-87.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451225_D9&quot;
+[1] &quot;451225&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-88.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451226_E2&quot;
+[1] &quot;451226&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-89.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451227_E5&quot;
+[1] &quot;451227&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-90.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451229_E3&quot;
+[1] &quot;451229&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-91.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451232_E10&quot;
+[1] &quot;451232&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-92.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451233_G4&quot;
+[1] &quot;451233&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-93.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451235_B7&quot;
+[1] &quot;451235&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-94.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451236_E9&quot;
+[1] &quot;451236&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-95.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451240_G4&quot;
+[1] &quot;451240&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-96.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451241_B2&quot;
+[1] &quot;451241&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-97.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451245_B8&quot;
+[1] &quot;451245&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-98.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451246_H5&quot;
+[1] &quot;451246&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-99.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451247_F7&quot;
+[1] &quot;451247&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-100.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451248_C2&quot;
+[1] &quot;451248&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-101.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451249_F10&quot;
+[1] &quot;451249&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-102.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451251_H5&quot;
+[1] &quot;451251&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-103.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451253_C6&quot;
+[1] &quot;451253&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-104.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451254_C8&quot;
+[1] &quot;451254&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-105.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451255_G5&quot;
+[1] &quot;451255&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-106.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451256_H10&quot;
+[1] &quot;451256&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-107.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451258_G11&quot;
+[1] &quot;451258&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-108.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451259_F9&quot;
+[1] &quot;451259&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-109.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451261_A6&quot;
+[1] &quot;451261&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-110.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451262_B3&quot;
+[1] &quot;451262&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-111.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451263_F11&quot;
+[1] &quot;451263&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-112.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451266_D2&quot;
+[1] &quot;451266&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-113.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451267_D8&quot;
+[1] &quot;451267&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-114.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451268_C5&quot;
+[1] &quot;451268&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-115.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451269_F2&quot;
+[1] &quot;451269&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-116.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451270_H11&quot;
+[1] &quot;451270&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-117.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451273_A2&quot;
+[1] &quot;451273&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-118.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451274_A4&quot;
+[1] &quot;451274&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-119.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451275_C11&quot;
+[1] &quot;451275&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-120.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451276_G3&quot;
+[1] &quot;451276&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-121.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451278_B12&quot;
+[1] &quot;451278&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-122.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451279_F12&quot;
+[1] &quot;451279&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-123.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451280_G2&quot;
+[1] &quot;451280&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-124.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_451281_A9&quot;
+[1] &quot;451281&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-125.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451283_A10&quot;
+[1] &quot;451283&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-126.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451284_D1&quot;
+[1] &quot;451284&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-127.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451359_E1&quot;
+[1] &quot;451359&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-128.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451361_D2&quot;
+[1] &quot;451361&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-129.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451364_H6&quot;
+[1] &quot;451364&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-130.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451365_B4&quot;
+[1] &quot;451365&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-131.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451366_B6&quot;
+[1] &quot;451366&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-132.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451368_A12&quot;
+[1] &quot;451368&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-133.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451381_A4&quot;
+[1] &quot;451381&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-134.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451384_B12&quot;
+[1] &quot;451384&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-135.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451385_A9&quot;
+[1] &quot;451385&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-136.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451386_C9&quot;
+[1] &quot;451386&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-137.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451387_G4&quot;
+[1] &quot;451387&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-138.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451388_B1&quot;
+[1] &quot;451388&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-139.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451393_E8&quot;
+[1] &quot;451393&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-140.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451394_C11&quot;
+[1] &quot;451394&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-141.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451395_A4&quot;
+[1] &quot;451395&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-142.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451396_E6&quot;
+[1] &quot;451396&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-143.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451397_B9&quot;
+[1] &quot;451397&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-144.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451398_C5&quot;
+[1] &quot;451398&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-145.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451400_C4&quot;
+[1] &quot;451400&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-146.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451402_A10&quot;
+[1] &quot;451402&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-147.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451404_A3&quot;
+[1] &quot;451404&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-148.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451406_A3&quot;
+[1] &quot;451406&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-149.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451408_A12&quot;
+[1] &quot;451408&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-150.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451410_B2&quot;
+[1] &quot;451410&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-151.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451412_F10&quot;
+[1] &quot;451412&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-152.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451413_B6&quot;
+[1] &quot;451413&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-153.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451414_C3&quot;
+[1] &quot;451414&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-154.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451416_C9&quot;
+[1] &quot;451416&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-155.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451420_F5&quot;
+[1] &quot;451420&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-156.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20190728_451422_A6&quot;
+[1] &quot;451422&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-157.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451422_E7&quot;
+[1] &quot;451422&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-158.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451423_B3&quot;
+[1] &quot;451423&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-159.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451425_B11&quot;
+[1] &quot;451425&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-160.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451426_E5&quot;
+[1] &quot;451426&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-161.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451428_G5&quot;
+[1] &quot;451428&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-162.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451429_H6&quot;
+[1] &quot;451429&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-163.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451430_F12&quot;
+[1] &quot;451430&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-164.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451431_D4&quot;
+[1] &quot;451431&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-165.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451479_A7&quot;
+[1] &quot;451479&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-166.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451480_C3&quot;
+[1] &quot;451480&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-167.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451482_B5&quot;
+[1] &quot;451482&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-168.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451485_B1&quot;
+[1] &quot;451485&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-169.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451489_B8&quot;
+[1] &quot;451489&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-170.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451492_A1&quot;
+[1] &quot;451492&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-171.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451493_B4&quot;
+[1] &quot;451493&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-172.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451496_E2&quot;
+[1] &quot;451496&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-173.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451497_G5&quot;
+[1] &quot;451497&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-174.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451498_D12&quot;
+[1] &quot;451498&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-175.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451584_H3&quot;
+[1] &quot;451584&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-176.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451585_B11&quot;
+[1] &quot;451585&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-177.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451586_B2&quot;
+[1] &quot;451586&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-178.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451587_E10&quot;
+[1] &quot;451587&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-179.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451588_E1&quot;
+[1] &quot;451588&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-180.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451589_H5&quot;
+[1] &quot;451589&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-181.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451590_D7&quot;
+[1] &quot;451590&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-182.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451591_C10&quot;
+[1] &quot;451591&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-183.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451599_C11&quot;
+[1] &quot;451599&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-184.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451600_F4&quot;
+[1] &quot;451600&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-185.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451601_G9&quot;
+[1] &quot;451601&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-186.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451605_G9&quot;
+[1] &quot;451605&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-187.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451607_D10&quot;
+[1] &quot;451607&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-188.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451610_G10&quot;
+[1] &quot;451610&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-189.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451611_A10&quot;
+[1] &quot;451611&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-190.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451613_F11&quot;
+[1] &quot;451613&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-191.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451614_A7&quot;
+[1] &quot;451614&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-192.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451615_G7&quot;
+[1] &quot;451615&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-193.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451620_C5&quot;
+[1] &quot;451620&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-194.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451621_C9&quot;
+[1] &quot;451621&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-195.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20190728_451635_B9&quot;
+[1] &quot;451635&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-196.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451637_A5&quot;
+[1] &quot;451637&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-197.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451638_E9&quot;
+[1] &quot;451638&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-198.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451640_B7&quot;
+[1] &quot;451640&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-199.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451644_C1&quot;
+[1] &quot;451644&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-200.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20190728_451645_B10&quot;
+[1] &quot;451645&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-201.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451646_A1&quot;
+[1] &quot;451646&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-202.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451647_D8&quot;
+[1] &quot;451647&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-203.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451658_C6&quot;
+[1] &quot;451658&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-204.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451661_B5&quot;
+[1] &quot;451661&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-205.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451662_C10&quot;
+[1] &quot;451662&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-206.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451664_H12&quot;
+[1] &quot;451664&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-207.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451665_E7&quot;
+[1] &quot;451665&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-208.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451666_F3&quot;
+[1] &quot;451666&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-209.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451669_D4&quot;
+[1] &quot;451669&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-210.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451671_B7&quot;
+[1] &quot;451671&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-211.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451672_D1&quot;
+[1] &quot;451672&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-212.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451673_G1&quot;
+[1] &quot;451673&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-213.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451674_B6&quot;
+[1] &quot;451674&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-214.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451675_A2&quot;
+[1] &quot;451675&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-215.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_2020727_451677_D11&quot;
+[1] &quot;451677&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-216.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451679_A2&quot;
+[1] &quot;451679&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-217.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451680_A11&quot;
+[1] &quot;451680&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-218.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451683_B10&quot;
+[1] &quot;451683&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-219.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451684_D6&quot;
+[1] &quot;451684&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-220.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451685_B9&quot;
+[1] &quot;451685&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-221.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451686_C7&quot;
+[1] &quot;451686&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-222.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451688_F11&quot;
+[1] &quot;451688&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-223.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451689_E6&quot;
+[1] &quot;451689&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-224.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451690_H9&quot;
+[1] &quot;451690&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-225.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451691_F6&quot;
+[1] &quot;451691&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-226.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451692_D10&quot;
+[1] &quot;451692&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-227.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451693_H11&quot;
+[1] &quot;451693&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-228.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451694_B10&quot;
+[1] &quot;451694&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-229.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451695_E10&quot;
+[1] &quot;451695&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-230.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451696_A6&quot;
+[1] &quot;451696&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-231.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451697_H5&quot;
+[1] &quot;451697&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-232.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451698_C5&quot;
+[1] &quot;451698&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-233.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451700_D10&quot;
+[1] &quot;451700&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-234.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451701_A2&quot;
+[1] &quot;451701&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-235.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451709_E2&quot;
+[1] &quot;451709&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-236.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451711_C7&quot;
+[1] &quot;451711&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-237.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451712_C11&quot;
+[1] &quot;451712&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-238.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451713_A6&quot;
+[1] &quot;451713&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-239.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451714_F6&quot;
+[1] &quot;451714&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-240.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451715_B10&quot;
+[1] &quot;451715&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-241.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451724_E12&quot;
+[1] &quot;451724&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-242.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451725_D7&quot;
+[1] &quot;451725&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-243.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451726_D2&quot;
+[1] &quot;451726&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-244.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451727_D3&quot;
+[1] &quot;451727&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-245.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451728_B11&quot;
+[1] &quot;451728&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-246.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451729_D12&quot;
+[1] &quot;451729&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-247.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451730_C8&quot;
+[1] &quot;451730&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-248.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451731_A12&quot;
+[1] &quot;451731&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-249.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451732_G2&quot;
+[1] &quot;451732&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-250.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451733_C1&quot;
+[1] &quot;451733&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-251.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451734_C12&quot;
+[1] &quot;451734&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-252.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451735_A9&quot;
+[1] &quot;451735&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-253.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451736_E4&quot;
+[1] &quot;451736&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-254.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451737_E3&quot;
+[1] &quot;451737&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-255.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451738_H7&quot;
+[1] &quot;451738&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-256.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451740_B7&quot;
+[1] &quot;451740&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-257.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451741_H4&quot;
+[1] &quot;451741&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-258.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451742_D1&quot;
+[1] &quot;451742&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-259.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451743_D3&quot;
+[1] &quot;451743&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-260.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451744_D8&quot;
+[1] &quot;451744&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-261.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451745_D5&quot;
+[1] &quot;451745&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-262.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451746_H10&quot;
+[1] &quot;451746&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-263.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451747_A11&quot;
+[1] &quot;451747&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-264.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451748_A4&quot;
+[1] &quot;451748&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-265.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_451749_B1&quot;
+[1] &quot;451749&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-266.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451749_H3&quot;
+[1] &quot;451749&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-267.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451751_H2&quot;
+[1] &quot;451751&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-268.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451752_C4&quot;
+[1] &quot;451752&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-269.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451756_D2&quot;
+[1] &quot;451756&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-270.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451757_G7&quot;
+[1] &quot;451757&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-271.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451759_A3&quot;
+[1] &quot;451759&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-272.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451760_D11&quot;
+[1] &quot;451760&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-273.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451761_D9&quot;
+[1] &quot;451761&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-274.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451762_B9&quot;
+[1] &quot;451762&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-275.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451763_D12&quot;
+[1] &quot;451763&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-276.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451766_G10&quot;
+[1] &quot;451766&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-277.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451767_G8&quot;
+[1] &quot;451767&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-278.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451771_B3&quot;
+[1] &quot;451771&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-279.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451772_B8&quot;
+[1] &quot;451772&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-280.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451773_D11&quot;
+[1] &quot;451773&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-281.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451774_D5&quot;
+[1] &quot;451774&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-282.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451775_E4&quot;
+[1] &quot;451775&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-283.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451776_F3&quot;
+[1] &quot;451776&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-284.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451779_G3&quot;
+[1] &quot;451779&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-285.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451780_C8&quot;
+[1] &quot;451780&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-286.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451781_B2&quot;
+[1] &quot;451781&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-287.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451783_C7&quot;
+[1] &quot;451783&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-288.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451787_C4&quot;
+[1] &quot;451787&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-289.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451788_C1&quot;
+[1] &quot;451788&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-290.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451790_F7&quot;
+[1] &quot;451790&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-291.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451793_H11&quot;
+[1] &quot;451793&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-292.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451795_A9&quot;
+[1] &quot;451795&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-293.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451796_C6&quot;
+[1] &quot;451796&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-294.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_2020727_451797_C11&quot;
+[1] &quot;451797&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-295.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451798_D6&quot;
+[1] &quot;451798&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-296.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451800_G2&quot;
+[1] &quot;451800&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-297.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451801_D6&quot;
+[1] &quot;451801&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-298.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451802_E5&quot;
+[1] &quot;451802&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-299.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451804_F7&quot;
+[1] &quot;451804&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-300.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451806_F4&quot;
+[1] &quot;451806&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-301.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451807_C2&quot;
+[1] &quot;451807&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-302.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451811_G12&quot;
+[1] &quot;451811&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-303.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451812_G6&quot;
+[1] &quot;451812&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-304.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451813_F8&quot;
+[1] &quot;451813&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-305.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451814_G3&quot;
+[1] &quot;451814&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-306.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451815_F8&quot;
+[1] &quot;451815&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-307.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451818_H7&quot;
+[1] &quot;451818&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-308.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451820_H4&quot;
+[1] &quot;451820&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-309.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451821_A7&quot;
+[1] &quot;451821&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-310.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451822_A11&quot;
+[1] &quot;451822&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-311.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451823_G6&quot;
+[1] &quot;451823&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-312.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451830_A8&quot;
+[1] &quot;451830&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-313.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451831_H10&quot;
+[1] &quot;451831&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-314.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451832_C2&quot;
+[1] &quot;451832&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-315.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451833_H2&quot;
+[1] &quot;451833&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-316.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451834_F9&quot;
+[1] &quot;451834&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-317.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451837_F1&quot;
+[1] &quot;451837&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-318.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451839_A8&quot;
+[1] &quot;451839&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-319.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451840_A10&quot;
+[1] &quot;451840&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-320.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451844_D9&quot;
+[1] &quot;451844&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-321.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451845_C12&quot;
+[1] &quot;451845&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-322.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451846_C2&quot;
+[1] &quot;451846&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-323.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451847_H9&quot;
+[1] &quot;451847&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-324.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451849_F1&quot;
+[1] &quot;451849&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-325.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451850_E11&quot;
+[1] &quot;451850&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-326.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451851_A8&quot;
+[1] &quot;451851&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-327.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451852_E8&quot;
+[1] &quot;451852&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-328.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451853_C10&quot;
+[1] &quot;451853&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-329.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451854_E12&quot;
+[1] &quot;451854&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-330.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451855_F2&quot;
+[1] &quot;451855&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-331.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451856_C3&quot;
+[1] &quot;451856&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-332.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451857_E9&quot;
+[1] &quot;451857&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-333.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451858_H1&quot;
+[1] &quot;451858&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-334.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20190728_451860_B3&quot;
+[1] &quot;451860&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-335.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_451861_H8&quot;
+[1] &quot;451861&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-336.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_452172_H6&quot;
+[1] &quot;452172&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-337.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_452173_F9&quot;
+[1] &quot;452173&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-338.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452174_C5&quot;
+[1] &quot;452174&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-339.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_452175_A2&quot;
+[1] &quot;452175&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-340.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452179_H7&quot;
+[1] &quot;452179&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-341.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452180_A1&quot;
+[1] &quot;452180&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-342.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452181_A7&quot;
+[1] &quot;452181&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-343.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452182_G7&quot;
+[1] &quot;452182&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-344.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20190728_452185_A9&quot;
+[1] &quot;452185&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-345.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_452187_H3&quot;
+[1] &quot;452187&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-346.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452189_G10&quot;
+[1] &quot;452189&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-347.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452194_F2&quot;
+[1] &quot;452194&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-348.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_452196_A9&quot;
+[1] &quot;452196&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-349.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_452197_D10&quot;
+[1] &quot;452197&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-350.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_452200_C12&quot;
+[1] &quot;452200&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-351.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453401_H9&quot;
+[1] &quot;453401&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-352.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453402_D5&quot;
+[1] &quot;453402&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-353.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453404_C2&quot;
+[1] &quot;453404&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-354.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453406_G6&quot;
+[1] &quot;453406&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-355.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453407_G5&quot;
+[1] &quot;453407&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-356.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453408_G6&quot;
+[1] &quot;453408&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-357.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453488_F5&quot;
+[1] &quot;453488&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-358.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453489_D3&quot;
+[1] &quot;453489&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-359.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453490_H3&quot;
+[1] &quot;453490&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-360.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453492_B10&quot;
+[1] &quot;453492&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-361.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453496_C9&quot;
+[1] &quot;453496&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-362.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453499_H2&quot;
+[1] &quot;453499&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-363.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453500_A12&quot;
+[1] &quot;453500&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-364.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453502_E4&quot;
+[1] &quot;453502&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-365.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453503_F5&quot;
+[1] &quot;453503&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-366.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453504_G10&quot;
+[1] &quot;453504&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-367.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Columbia_University_John_MURGIGV01_20200529_453506_C6&quot;
+[1] &quot;453506&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-368.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453509_H8&quot;
+[1] &quot;453509&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-369.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453511_B5&quot;
+[1] &quot;453511&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-370.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453513_E12&quot;
+[1] &quot;453513&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-371.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453514_F8&quot;
+[1] &quot;453514&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-372.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453515_A1&quot;
+[1] &quot;453515&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-373.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191107_453516_C10&quot;
+[1] &quot;453516&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-374.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] &quot;Jackson_Lab_John_MURGIGV01_20191114_453517_A8&quot;
+[1] &quot;453517&quot;</code></pre>
+<p><img src="figure/0.2_haplotype_comparison_aqc_b6.q105x.Rmd/phased%20plots-375.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.2 (2019-12-12)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.7
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] qtl2_0.22       broman_0.70-4   workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.4.6      knitr_1.28        whisker_0.4       magrittr_1.5     
+ [5] bit_1.1-15.2      R6_2.4.1          rlang_0.4.6       blob_1.2.1       
+ [9] stringr_1.4.0     tools_3.6.2       parallel_3.6.2    data.table_1.12.8
+[13] xfun_0.13         DBI_1.1.0         git2r_0.26.1      htmltools_0.4.0  
+[17] bit64_0.9-7       yaml_2.2.1        digest_0.6.25     rprojroot_1.3-2  
+[21] assertthat_0.2.1  later_1.0.0       vctrs_0.3.1       promises_1.1.0   
+[25] fs_1.4.1          memoise_1.1.0     glue_1.4.1        evaluate_0.14    
+[29] RSQLite_2.2.0     rmarkdown_2.1     stringi_1.4.6     compiler_3.6.2   
+[33] backports_1.1.7   jsonlite_1.6.1    httpuv_1.5.2     </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

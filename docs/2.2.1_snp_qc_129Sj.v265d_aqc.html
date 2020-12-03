@@ -13,7 +13,7 @@
 
 <meta name="date" content="2020-12-03" />
 
-<title>John/Tolman Workflow</title>
+<title>Step 2: SNP QC [129Sj.v265d]</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,6 +24,7 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -310,7 +311,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">John/Tolman Workflow</h1>
+<h1 class="title toc-ignore">Step 2: SNP QC [129Sj.v265d]</h1>
 <h4 class="author">Belinda Cornes</h4>
 <h4 class="date">2020-12-03</h4>
 
@@ -318,17 +319,18 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#project-at-a-glance">Project At A Glance</a></li>
-<li><a href="#haplotype-phasing">Haplotype Phasing</a></li>
-<li><a href="#phenotype-qc">1. Phenotype QC</a></li>
-<li><a href="#genotype-qc">2. Genotype QC</a></li>
-<li><a href="#qtl-analysis">3. QTL Analysis</a></li>
+<li><a href="#loading-project">Loading Project</a></li>
+<li><a href="#marker-missing-data">Marker Missing Data</a></li>
+<li><a href="#marker-genotype-frequencies">Marker Genotype Frequencies</a></li>
+<li><a href="#marker-genotype-errors">Marker Genotype Errors</a></li>
+<li><a href="#removing-markers">Removing Markers</a></li>
+<li><a href="#array-intensities">Array Intensities</a></li>
 </ul>
 </div>
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -337,7 +339,7 @@ $(document).ready(function () {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -349,7 +351,7 @@ $(document).ready(function () {
 <strong>Last updated:</strong> 2020-12-03
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>John-Toleman_workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -361,7 +363,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <hr>
 </div>
 <div id="checks" class="tab-pane fade">
-<div id="workflowr-checks" class="panel-group">
+<div class="panel-group" id="workflowr-checks">
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
@@ -425,12 +427,36 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
 </p>
 </div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+<p>
+Using absolute paths to the files within your workflowr project makes it difficult for you and others to run your code on a different machine. Change the absolute path(s) below to the suggested relative path(s) to make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/Users/corneb/Documents/MyJax/CS/Projects/Simon.John.Tolman/workflowr/John-Toleman_workflow
+</td>
+<td style="text-align:left;">
+.
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -797,7 +823,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML (<code>docs/index.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/2.2.1_snp_qc_129Sj.v265d_aqc.Rmd</code>) and HTML (<code>docs/2.2.1_snp_qc_129Sj.v265d_aqc.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -826,7 +852,7 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/a14be3cc4c327bdf2652261c3a7dfe7e49660524/analysis/index.Rmd" target="_blank">a14be3c</a>
+<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/a14be3cc4c327bdf2652261c3a7dfe7e49660524/analysis/2.2.1_snp_qc_129Sj.v265d_aqc.Rmd" target="_blank">a14be3c</a>
 </td>
 <td>
 Belinda Cornes
@@ -838,210 +864,6 @@ Belinda Cornes
 Correcting For Problematic Samples
 </td>
 </tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/dac4e2bd601b1b44f3d915c87a8e6649b0dbcc79/analysis/index.Rmd" target="_blank">dac4e2b</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/455d2739da52c4d8857bd43fe82f09d9b8d94902/docs/index.html" target="_blank">455d273</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/b7ba59045a6aded3f97e9d3e920864a8cd0e4198/analysis/index.Rmd" target="_blank">b7ba590</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-updated index file
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/0bfda7a52bd7ae3ade281d9ab9777a60fbfbc684/docs/index.html" target="_blank">0bfda7a</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/894ae437b4969067c977960bf37443e515272ae7/analysis/index.Rmd" target="_blank">894ae43</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-all samples
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/8b6ff3d24ca0b249d52c8cb95ae509d7718670e8/docs/index.html" target="_blank">8b6ff3d</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-15
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/39a6564fb73f4c861120c7a64b43b6606a17b73c/analysis/index.Rmd" target="_blank">39a6564</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-15
-</td>
-<td>
-updated index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/3792d7b3394d9e30b081546301461b7edb6c151f/docs/index.html" target="_blank">3792d7b</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/ec48947a2a1d4e34e8bd837e821f28c4c5d0b0bb/analysis/index.Rmd" target="_blank">ec48947</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-14
-</td>
-<td>
-updating qc steps
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/575cd8cd86ca14e8e7917782b914120389cd82c1/docs/index.html" target="_blank">575cd8c</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-12
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/4d36b4394a15d54d1fc55bec20810f21f3184378/analysis/index.Rmd" target="_blank">4d36b43</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-12
-</td>
-<td>
-Build site
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/353cf60a4bcbbeaf246db667c4b2f93929879d11/analysis/index.Rmd" target="_blank">353cf60</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-12
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1049,132 +871,224 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<div id="project-at-a-glance" class="section level3">
-<h3>Project At A Glance</h3>
-<ul>
-<li>Samples: b6.v265d
-<ul>
-<li><a href="0.1_samples_batch_b6.v265d.html">Total Samples: 202</a></li>
-<li><a href="0.1_samples_batch_b6.v265d_aqc.html">Total Samples (Ater Correcting For Problematic Samples): 185</a></li>
-</ul></li>
-<li>Samples: b6.q105x
-<ul>
-<li><a href="0.1_samples_batch_b6.q105x.html">Total Samples: 383</a></li>
-<li><a href="0.1_samples_batch_b6.q105x_aqc.html">Total Samples (Ater Correcting For Problematic Samples): 375</a></li>
-</ul></li>
-<li>Samples: d2.q105x
-<ul>
-<li><a href="0.1_samples_batch_d2.q105x.html">Total Samples: 134</a></li>
-<li><a href="0.1_samples_batch_d2.q105x_aqc.html">Total Samples (Ater Correcting For Problematic Samples): 131</a></li>
-</ul></li>
-<li>Samples: 129Sj.v265d
-<ul>
-<li><a href="0.1_samples_batch_129Sj.v265d.html">Total Samples: 136</a></li>
-<li><a href="0.1_samples_batch_129Sj.v265d_aqc.html">Total Samples (Ater Correcting For Problematic Samples): 127</a></li>
-</ul></li>
-</ul>
+<div id="loading-project" class="section level3">
+<h3>Loading Project</h3>
+<pre class="r"><code>load(&quot;data/e_g_snpg_samqc_129Sj.v265d_john.RData&quot;)
+gm &lt;- get(load(&quot;data/gm_samqc_129Sj.v265d_john.RData&quot;))
+
+gm</code></pre>
+<pre><code>Object of class cross2 (crosstype &quot;dof1&quot;)
+
+Total individuals               125
+No. genotyped individuals       125
+No. phenotyped individuals      125
+No. with both geno &amp; pheno      125
+
+No. phenotypes                    1
+No. covariates                    3
+No. phenotype covariates          0
+
+No. chromosomes                  20
+Total markers                137302
+
+No. markers by chr:
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+10423 10441  8206  7955  8030  8130  7760  6717  6984  6631  7433  6444  6327 
+   14    15    16    17    18    19     X 
+ 6230  5534  5179  5323  4787  3676  5092 </code></pre>
+<p>It can also be useful to look at the proportion of missing genotypes by marker. Markers with a lot of missing data were likely difficult to call, and so the genotypes that were called may contain a lot of errors.</p>
 </div>
-<div id="haplotype-phasing" class="section level3">
-<h3>Haplotype Phasing</h3>
-<ul>
-<li>Before QC
-<ul>
-<li><a href="0.2_haplotype_comparison_bqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="0.2_haplotype_comparison_bqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_bqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_bqc_129Sj.v265d.html">129Sj.v265d</a></li>
-</ul></li>
-<li>Ater Correcting For Problematic Samples
-<ul>
-<li><a href="0.2_haplotype_comparison_aqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="0.2_haplotype_comparison_aqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_aqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_aqc_129Sj.v265d.html">129Sj.v265d</a></li>
-</ul></li>
-</ul>
+<div id="marker-missing-data" class="section level3">
+<h3>Marker Missing Data</h3>
+<pre class="r"><code>pmis_mar &lt;- n_missing(gm, &quot;marker&quot;, &quot;proportion&quot;)*100
+save(pmis_mar, file = &quot;data/percent_missing_marker_129Sj.v265d_john.RData&quot;)
+
+par(mar=c(5.1,0.6,0.6, 0.6))
+hist(pmis_mar, breaks=seq(0, 100, length=201),
+     main=&quot;&quot;, yaxt=&quot;n&quot;, ylab=&quot;&quot;, xlab=&quot;Percent missing genotypes&quot;)
+rug(pmis_mar)</code></pre>
+<p><img src="figure/2.2.1_snp_qc_129Sj.v265d_aqc.Rmd/Missing%20data%20in%20Markers%20and%20Genotype%20frequencies%20Markers-1.png" width="912" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pdf(file = &quot;output/Percent_missing_genotype_data_per_marker_129Sj.v265d_john.pdf&quot;)
+par(mar=c(5.1,0.6,0.6, 0.6))
+hist(pmis_mar, breaks=seq(0, 100, length=201),
+     main=&quot;&quot;, yaxt=&quot;n&quot;, ylab=&quot;&quot;, xlab=&quot;Percent missing genotypes&quot;)
+rug(pmis_mar)
+dev.off()</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<table class="table table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+pmis_mar_5
+</td>
+<td style="text-align:center;">
+11548
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_10
+</td>
+<td style="text-align:center;">
+8156
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_15
+</td>
+<td style="text-align:center;">
+6506
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_25
+</td>
+<td style="text-align:center;">
+4821
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_50
+</td>
+<td style="text-align:center;">
+3824
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pmis_mar_75
+</td>
+<td style="text-align:center;">
+3637
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: white !important;background-color: black !important;">
+total_snps
+</td>
+<td style="text-align:center;font-weight: bold;color: white !important;background-color: black !important;">
+137302
+</td>
+</tr>
+</tbody>
+</table>
+<p>For the markers with lots of missing genotypes, it’s not necessarily the case that the remaining genotypes are full of errors, but in studying the allele intensities at these SNPs, it does appear that for the bulk of such markers, the genotypes are not being called appropriately.</p>
 </div>
-<div id="phenotype-qc" class="section level3">
-<h3>1. Phenotype QC</h3>
-<ul>
-<li>Phenotypes - Max_IOP
-<ul>
-<li><a href="1.1_phenotypes_b6.v265d.html">b6.v265d</a></li>
-<li><a href="1.1_phenotypes_b6.q105x.html">b6.q105x</a></li>
-<li><a href="1.1_phenotypes_d2.q105x.html">d2.q105x</a></li>
-<li><a href="1.1_phenotypes_129Sj.v265d.html">129Sj.v265d</a></li>
-</ul></li>
-</ul>
+<div id="marker-genotype-frequencies" class="section level3">
+<h3>Marker Genotype Frequencies</h3>
+<pre class="r"><code>g &lt;- do.call(&quot;cbind&quot;, gm$geno[1:19])
+fg &lt;- do.call(&quot;cbind&quot;, gm$founder_geno[1:19])
+g &lt;- g[,colSums(fg==0)==0]
+fg &lt;- fg[,colSums(fg==0)==0]
+fgn &lt;- colSums(fg==3)
+
+gf_mar &lt;- t(apply(g, 2, function(a) table(factor(a, 1:3))/sum(a != 0)))
+gn_mar &lt;- t(apply(g, 2, function(a) table(factor(a, 1:3))))
+
+pdf(file = &quot;output/genotype_frequency_marker_129Sj.v265d_john.pdf&quot;)
+par(mfrow=c(2,2), mar=c(0.6, 0.6, 2.6, 0.6))
+for(i in 1:4) {
+  triplot(c(&quot;AA&quot;, &quot;AB&quot;, &quot;BB&quot;), main=paste0(&quot;MAF = &quot;, i, &quot;/8&quot;))
+  z &lt;- gf_mar[fgn==i,]
+  z &lt;- z[rowSums(is.na(z)) &lt; 3,]
+  tripoints(z, pch=21, bg=&quot;gray80&quot;, cex=0.6)
+  tripoints(c((1-i/8)^2, 2*i/8*(1-i/8), (i/8)^2), pch=21, bg=&quot;violetred&quot;)
+}
+dev.off()</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<pre class="r"><code>par(mfrow=c(2,2), mar=c(0.6, 0.6, 2.6, 0.6))
+for(i in 1:4) {
+  triplot(c(&quot;AA&quot;, &quot;AB&quot;, &quot;BB&quot;), main=paste0(&quot;MAF = &quot;, i, &quot;/8&quot;))
+  z &lt;- gf_mar[fgn==i,]
+  z &lt;- z[rowSums(is.na(z)) &lt; 3,]
+  tripoints(z, pch=21, bg=&quot;gray80&quot;, cex=0.6)
+  tripoints(c((1-i/8)^2, 2*i/8*(1-i/8), (i/8)^2), pch=21, bg=&quot;violetred&quot;)
+}</code></pre>
+<p><img src="figure/2.2.1_snp_qc_129Sj.v265d_aqc.Rmd/Genotype%20frequencies%20Markers-1.png" width="912" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>save(gf_mar, file = &quot;data/genotype_freq_marker_129Sj.v265d_john.RData&quot;)</code></pre>
+<p>The bulk of the markers seem well behaved, but there are a number of markers with unusual genotype frequencies. There are markers that show no homozygotes for the major allele. (These sit on the left edge.) There are markers that are monomorphic (100% AA genotypes; lower-right vertex). And there some markers with some of each homozygote but no heterozygotes (bottom edge). Further, there are a bunch of markers where the minor allele appears to be private to one founder strain (upper-left panel) but show a high frequency of minor alleles in the DO offspring.</p>
 </div>
-<div id="genotype-qc" class="section level3">
-<h3>2. Genotype QC</h3>
-<ul>
-<li>Step 1: Sample QC
-<ul>
-<li>Before QC
-<ul>
-<li><a href="2.1_sample_bqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="2.1_sample_bqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="2.1_sample_bqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="2.1_sample_bqc_129Sj.v265d.html">129Sj.v265d</a></li>
-<li><a href="2.1_sample_bqc_all.samples.html">all samples</a></li>
-</ul></li>
-<li>Ater Correcting For Problematic Samples
-<ul>
-<li><a href="2.1_sample_bqc_b6.v265d_aqc.html">b6.v265d</a></li>
-<li><a href="2.1_sample_bqc_b6.q105x_aqc.html">b6.q105x</a></li>
-<li><a href="2.1_sample_bqc_d2.q105x_aqc.html">d2.q105x</a></li>
-<li><a href="2.1_sample_bqc_129Sj.v265d_aqc.html">129Sj.v265d</a></li>
-</ul></li>
-</ul></li>
-<li>Step 2: SNP QC (Monomorphic, Genotype Error &amp; Missing Data)
-<ul>
-<li>Before QC
-<ul>
-<li><a href="2.2.1_snp_qc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="2.2.1_snp_qc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="2.2.1_snp_qc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="2.2.1_snp_qc_129Sj.v265d.html">129Sj.v265d</a></li>
-<li><a href="2.2.1_snp_qc_all.samples.html">all samples</a></li>
-</ul></li>
-<li>Ater Correcting For Problematic Samples
-<ul>
-<li><a href="2.2.1_snp_qc_b6.v265d_aqc.html">b6.v265d</a></li>
-<li><a href="2.2.1_snp_qc_b6.q105x_aqc.html">b6.q105x</a></li>
-<li><a href="2.2.1_snp_qc_d2.q105x_aqc.html">d2.q105x</a></li>
-<li><a href="2.2.1_snp_qc_129Sj.v265d_aqc.html">129Sj.v265d</a></li>
-</ul></li>
-</ul></li>
-<li>Step 3: Effect of Data Cleaning
-<ul>
-<li>Before QC
-<ul>
-<li><a href="2.3.1_afterqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="2.3.1_afterqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="2.3.1_afterqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="2.3.1_afterqc_129Sj.v265d.html">129Sj.v265d</a></li>
-<li><a href="2.3.1_afterqc_all.samples.html">all samples</a></li>
-</ul></li>
-<li>Ater Correcting For Problematic Samples
-<ul>
-<li><a href="2.3.1_afterqc_b6.v265d_aqc.html">b6.v265d</a></li>
-<li><a href="2.3.1_afterqc_b6.q105x_aqc.html">b6.q105x</a></li>
-<li><a href="2.3.1_afterqc_d2.q105x_aqc.html">d2.q105x</a></li>
-<li><a href="2.3.1_afterqc_129Sj.v265d_aqc.html">129Sj.v265d</a></li>
-</ul></li>
-</ul></li>
-<li>Step 4: Preparing Files for QTL Analysis</li>
-</ul>
+<div id="marker-genotype-errors" class="section level3">
+<h3>Marker Genotype Errors</h3>
+<pre class="r"><code>errors_mar &lt;- colSums(e&gt;2)/n_typed(gm, &quot;marker&quot;)*100
+
+grayplot(pmis_mar, errors_mar,
+         xlab=&quot;Proportion missing&quot;, ylab=&quot;Proportion genotyping errors&quot;)</code></pre>
+<p><img src="figure/2.2.1_snp_qc_129Sj.v265d_aqc.Rmd/Genotype%20errors%20Markers-1.png" width="912" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pdf(file = &quot;output/genotype_error_marker_129Sj.v265d_john.pdf&quot;)
+grayplot(pmis_mar, errors_mar,
+         xlab=&quot;Proportion missing&quot;, ylab=&quot;Proportion genotyping errors&quot;)
+dev.off()</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<pre class="r"><code>save(errors_mar, file = &quot;data/genotype_errors_marker_129Sj.v265d_john.RData&quot;)</code></pre>
+<p>Markers with higher rates of missing genotypes tend to show higher errors rates.</p>
 </div>
-<div id="qtl-analysis" class="section level3">
-<h3>3. QTL Analysis</h3>
-<ul>
-<li>Step 1: Recombination Block Size &amp; Founder Proportions</li>
-<li>Step 2: GCTA Heritability</li>
-<li>Step 3: QTL Mapping (<code>R/qtl2</code>)</li>
-<li>Step 4: QTL Permutation (<code>R/qtl2</code>)</li>
-<li>Step 5: QTL Best Linear Unbiased Prediction (BLUP) (<code>R/qtl2</code>)</li>
-<li>Step 6: Results from <code>R/qtl2</code> analysis [Raw Data]</li>
-</ul>
+<div id="removing-markers" class="section level3">
+<h3>Removing Markers</h3>
+<div id="missingness" class="section level4">
+<h4>Missingness</h4>
+<pre><code>[1] 8156</code></pre>
+</div>
+<div id="monomorphiclow-frequency-markers" class="section level4">
+<h4>Monomorphic/Low Frequency markers</h4>
+<pre><code>[1] 12696</code></pre>
+</div>
+<div id="genotyping-error" class="section level4">
+<h4>Genotyping Error</h4>
+<pre><code>[1] 6655</code></pre>
+</div>
+<div id="total" class="section level4">
+<h4>Total</h4>
+<pre><code>[1] 23579</code></pre>
+<p>List of markers with errors can be found <a href="bad_markers_allqc.html">here</a></p>
+</div>
+</div>
+<div id="array-intensities" class="section level3">
+<h3>Array Intensities</h3>
+<p>Figures for all SNPs that are will be removed are found <a href="array_intensities_bad.markers_allqc.html">here</a></p>
+<pre class="r"><code>#missing in at least 10% of the samples
+
+
+gm_allqc2 &lt;- drop_markers(gm_samqc, bad_markers$marker)
+gm_allqc &lt;- drop_nullmarkers(gm_allqc2)</code></pre>
+<pre><code>Dropping 894 noninformative markers</code></pre>
+<pre class="r"><code>gm_allqc</code></pre>
+<pre><code>Object of class cross2 (crosstype &quot;dof1&quot;)
+
+Total individuals               125
+No. genotyped individuals       125
+No. phenotyped individuals      125
+No. with both geno &amp; pheno      125
+
+No. phenotypes                    1
+No. covariates                    3
+No. phenotype covariates          0
+
+No. chromosomes                  20
+Total markers                112829
+
+No. markers by chr:
+   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16 
+8707 8859 6620 6771 6731 6716 6492 5762 5992 5586 6439 5329 5383 5145 4606 4417 
+  17   18   19    X 
+4425 4083 3148 1618 </code></pre>
+<pre class="r"><code>save(gm_allqc, file = &quot;data/gm_allqc_129Sj.v265d_john.RData&quot;)</code></pre>
+<p>After full qc (<a href="2.2_sample_bqc.html">sample</a> $ SNP), we ran all checks <a href="2.4.1_afterqc.html">again</a> to see if data improved for <code>R/qtl2</code> analysis.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1198,15 +1112,26 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] workflowr_1.6.2
+ [1] fst_0.9.2        knitr_1.28       kableExtra_1.1.0 mclust_5.4.6    
+ [5] ggrepel_0.8.2    ggplot2_3.3.2    qtlcharts_0.11-6 qtl2_0.22       
+ [9] broman_0.70-4    workflowr_1.6.2 
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.4.6    rprojroot_1.3-2 digest_0.6.25   later_1.0.0    
- [5] R6_2.4.1        backports_1.1.7 git2r_0.26.1    magrittr_1.5   
- [9] evaluate_0.14   stringi_1.4.6   rlang_0.4.6     fs_1.4.1       
-[13] promises_1.1.0  whisker_0.4     rmarkdown_2.1   tools_3.6.2    
-[17] stringr_1.4.0   glue_1.4.1      httpuv_1.5.2    xfun_0.13      
-[21] yaml_2.2.1      compiler_3.6.2  htmltools_0.4.0 knitr_1.28     </code></pre>
+ [1] tidyselect_1.0.0  xfun_0.13         purrr_0.3.4       colorspace_1.4-1 
+ [5] vctrs_0.3.1       viridisLite_0.3.0 htmltools_0.4.0   yaml_2.2.1       
+ [9] blob_1.2.1        rlang_0.4.6       later_1.0.0       pillar_1.4.4     
+[13] glue_1.4.1        withr_2.2.0       DBI_1.1.0         bit64_0.9-7      
+[17] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     gtable_0.3.0     
+[21] rvest_0.3.5       memoise_1.1.0     evaluate_0.14     httpuv_1.5.2     
+[25] parallel_3.6.2    highr_0.8         Rcpp_1.0.4.6      readr_1.3.1      
+[29] promises_1.1.0    scales_1.1.1      backports_1.1.7   webshot_0.5.2    
+[33] fs_1.4.1          bit_1.1-15.2      hms_0.5.3         digest_0.6.25    
+[37] stringi_1.4.6     dplyr_0.8.5       grid_3.6.2        rprojroot_1.3-2  
+[41] tools_3.6.2       magrittr_1.5      RSQLite_2.2.0     tibble_3.0.1     
+[45] crayon_1.3.4      whisker_0.4       pkgconfig_2.0.3   ellipsis_0.3.1   
+[49] data.table_1.12.8 xml2_1.3.1        assertthat_0.2.1  rmarkdown_2.1    
+[53] httr_1.4.1        rstudioapi_0.11   qtl_1.46-2        R6_2.4.1         
+[57] git2r_0.26.1      compiler_3.6.2   </code></pre>
 </div>
 </div>
 
