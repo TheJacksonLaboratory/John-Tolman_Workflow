@@ -13,7 +13,7 @@
 
 <meta name="date" content="2020-12-11" />
 
-<title>John/Tolman Workflow</title>
+<title>Results from R/qtl2 Analayis (Plots) - max corneal haze</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -310,7 +310,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">John/Tolman Workflow</h1>
+<h1 class="title toc-ignore">Results from <code>R/qtl2</code> Analayis (Plots) - max corneal haze</h1>
 <h4 class="author">Belinda Cornes</h4>
 <h4 class="date">2020-12-11</h4>
 
@@ -318,17 +318,16 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#project-at-a-glance">Project At A Glance</a></li>
-<li><a href="#haplotype-phasing">Haplotype Phasing</a></li>
-<li><a href="#phenotype-qc">1. Phenotype QC</a></li>
-<li><a href="#genotype-qc">2. Genotype QC</a></li>
-<li><a href="#qtl-analysis">3. QTL Analysis</a></li>
+<li><a href="#plot-scan-results-m1-sex-generation">Plot Scan Results: m1 (Sex + Generation)</a></li>
+<li><a href="#plot-scan-results-m2-sex">Plot Scan Results: m2 (Sex)</a></li>
+<li><a href="#plot-scan-results-m5-sex-cross">Plot Scan Results: m5 (Sex + Cross)</a></li>
+<li><a href="#plot-scan-results-m7-sex-cross-genotype">Plot Scan Results: m7 (Sex + Cross + Genotype)</a></li>
 </ul>
 </div>
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -337,7 +336,7 @@ $(document).ready(function () {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -349,7 +348,7 @@ $(document).ready(function () {
 <strong>Last updated:</strong> 2020-12-11
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>John-Toleman_workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -361,7 +360,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <hr>
 </div>
 <div id="checks" class="tab-pane fade">
-<div id="workflowr-checks" class="panel-group">
+<div class="panel-group" id="workflowr-checks">
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
@@ -425,12 +424,36 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
 </p>
 </div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+<p>
+Using absolute paths to the files within your workflowr project makes it difficult for you and others to run your code on a different machine. Change the absolute path(s) below to the suggested relative path(s) to make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/Users/corneb/Documents/MyJax/CS/Projects/Simon.John.Tolman/workflowr/John-Toleman_workflow//
+</td>
+<td style="text-align:left;">
+.
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -809,7 +832,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML (<code>docs/index.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd</code>) and HTML (<code>docs/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -838,7 +861,7 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/d80df44f1dcd0dcd536cdb4019b0fe0237e31761/analysis/index.Rmd" target="_blank">d80df44</a>
+<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/d80df44f1dcd0dcd536cdb4019b0fe0237e31761/analysis/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd" target="_blank">d80df44</a>
 </td>
 <td>
 Belinda Cornes
@@ -850,329 +873,6 @@ Belinda Cornes
 QTL mapping (clean up)
 </td>
 </tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/797cbc9d24747698b580a293f014f44734fc0c1f/docs/index.html" target="_blank">797cbc9</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/9e81833b493450241773b7c4ca05536e3e08968f/analysis/index.Rmd" target="_blank">9e81833</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-09
-</td>
-<td>
-QTL mapping (problems)
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/c79966b0a23f84c58d73554d0f1dbea45759b84f/analysis/index.Rmd" target="_blank">c79966b</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-07
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/ac17502fe310e72a842730bfe15cc1f22c9fc83d/docs/index.html" target="_blank">ac17502</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/79c235de73dd64853f0ed4c190429fa3ac4effa5/analysis/index.Rmd" target="_blank">79c235d</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-03
-</td>
-<td>
-updated index file
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/38907d1128c720793cb674491f62794ca5dadb4d/docs/index.html" target="_blank">38907d1</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/a14be3cc4c327bdf2652261c3a7dfe7e49660524/analysis/index.Rmd" target="_blank">a14be3c</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-03
-</td>
-<td>
-Correcting For Problematic Samples
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/dac4e2bd601b1b44f3d915c87a8e6649b0dbcc79/analysis/index.Rmd" target="_blank">dac4e2b</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/455d2739da52c4d8857bd43fe82f09d9b8d94902/docs/index.html" target="_blank">455d273</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/b7ba59045a6aded3f97e9d3e920864a8cd0e4198/analysis/index.Rmd" target="_blank">b7ba590</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-updated index file
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/0bfda7a52bd7ae3ade281d9ab9777a60fbfbc684/docs/index.html" target="_blank">0bfda7a</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/894ae437b4969067c977960bf37443e515272ae7/analysis/index.Rmd" target="_blank">894ae43</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-23
-</td>
-<td>
-all samples
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/8b6ff3d24ca0b249d52c8cb95ae509d7718670e8/docs/index.html" target="_blank">8b6ff3d</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-15
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/39a6564fb73f4c861120c7a64b43b6606a17b73c/analysis/index.Rmd" target="_blank">39a6564</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-15
-</td>
-<td>
-updated index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/3792d7b3394d9e30b081546301461b7edb6c151f/docs/index.html" target="_blank">3792d7b</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/ec48947a2a1d4e34e8bd837e821f28c4c5d0b0bb/analysis/index.Rmd" target="_blank">ec48947</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-14
-</td>
-<td>
-updating qc steps
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/TheJacksonLaboratory/John-Tolman_Workflow/575cd8cd86ca14e8e7917782b914120389cd82c1/docs/index.html" target="_blank">575cd8c</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-12
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/4d36b4394a15d54d1fc55bec20810f21f3184378/analysis/index.Rmd" target="_blank">4d36b43</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-12
-</td>
-<td>
-Build site
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/TheJacksonLaboratory/John-Tolman_Workflow/blob/353cf60a4bcbbeaf246db667c4b2f93929879d11/analysis/index.Rmd" target="_blank">353cf60</a>
-</td>
-<td>
-Belinda Cornes
-</td>
-<td>
-2020-11-12
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1180,145 +880,349 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<div id="project-at-a-glance" class="section level3">
-<h3>Project At A Glance</h3>
-<ul>
-<li>Samples: b6.v265d
-<ul>
-<li><a href="0.1_samples_batch_b6.v265d.html">Total Samples: 202</a></li>
-<li><a href="0.1_samples_batch_b6.v265d_aqc.html">Total Samples (After Correcting For Problematic Samples): 185</a></li>
-</ul></li>
-<li>Samples: b6.q105x
-<ul>
-<li><a href="0.1_samples_batch_b6.q105x.html">Total Samples: 383</a></li>
-<li><a href="0.1_samples_batch_b6.q105x_aqc.html">Total Samples (After Correcting For Problematic Samples): 375</a></li>
-</ul></li>
-<li>Samples: d2.q105x
-<ul>
-<li><a href="0.1_samples_batch_d2.q105x.html">Total Samples: 134</a></li>
-<li><a href="0.1_samples_batch_d2.q105x_aqc.html">Total Samples (After Correcting For Problematic Samples): 131</a></li>
-</ul></li>
-<li>Samples: 129Sj.v265d
-<ul>
-<li><a href="0.1_samples_batch_129Sj.v265d.html">Total Samples: 136</a></li>
-<li><a href="0.1_samples_batch_129Sj.v265d_aqc.html">Total Samples (After Correcting For Problematic Samples): 127</a></li>
-</ul></li>
-</ul>
+<p>This script will plot the qtl mapping results.</p>
+<pre class="r"><code>i = names(pheno)[14]
+i</code></pre>
+<pre><code>[1] &quot;max_corneal_haze&quot;</code></pre>
+<div id="plot-scan-results-m1-sex-generation" class="section level3">
+<h3>Plot Scan Results: m1 (Sex + Generation)</h3>
+<pre class="r"><code>print(&quot;Covariates: Sex &amp; Generation (m1)&quot;)</code></pre>
+<pre><code>[1] &quot;Covariates: Sex &amp; Generation (m1)&quot;</code></pre>
+<pre class="r"><code>load(paste0(&quot;output/qtl.mapping_sorted/m1_sex.generation_&quot;,name.phenocsv,&quot;_sorted.RData&quot;))
+
+##############################################
+## permutation results
+##############################################
+#The default is to return the 5% significance thresholds. Thresholds for other (or for multiple) significance levels can be obtained via the alpha argument.
+
+#for(i in names(m1.qtl.out)){
+#for(i in phenotypes){
+operm &lt;- get(load(paste0(&quot;output/permu_sorted/m1_sex.generation_nperm.100_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_sorted.RData&quot;)))
+cutoff = summary(operm, alpha = c(0.2, 0.1, 0.05, 0.01))
+cutoff</code></pre>
+<pre><code>LOD thresholds (100 permutations)
+     pheno1
+0.2    7.50
+0.1    8.05
+0.05   8.62
+0.01  10.26</code></pre>
+<pre class="r"><code>##############################################
+## Genome wide results
+##############################################
+#pdf(file = paste0(&quot;output/figures_sorted/m1_sex.generation_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_genomescan_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+ymx &lt;- maxlod(m1.qtl.out[[i]]) # overall maximum LOD score
+plot(m1.qtl.out[[i]], 
+  gmap, 
+  lodcolumn=1,
+  col=&quot;slateblue&quot;, 
+  ylim=c(0, ymx*1.3),
+  main=paste0(&quot;Genomescan (sex &amp; generation) (scan1): &quot;, i))
+  abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2) </code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m1-1.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#dev.off()
+
+#pdf(file = paste0(&quot;output/figures_sorted/m1_sex.generation_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_gwas_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+plot(m1.gwas[[i]]$lod, 
+     m1.gwas[[i]]$snpinfo, 
+     altcol=&quot;green4&quot;, 
+     gap=0, 
+     main = paste0(&quot;GWAS (sex &amp; generation) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m1-2.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#     abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2)
+#dev.off()
+
+##############################################
+## QTL Results
+##############################################
+
+#load blup results
+load(paste0(&quot;output/blup_sorted/m1_sex.generation_blup_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_sorted.RData&quot;))
+
+#coeffects plot
+#pdf(file = paste0(&quot;output/figures_sorted/m1_sex.generation_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_coeff_geneplot_sorted.pdf&quot;), width = 14)
+#for(i in names(m1.qtl.out)){
+  chr &lt;- as.character(m1.peak[[i]][m1.peak[[i]]$lodcolumn == i,&quot;chr&quot;])
+  par(mar=c(4.1, 4.1, 1.6, 1.6))
+  plot_coefCC(m1.coef[[i]], 
+              gmap[chr], 
+              scan1_output=m1.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex &amp; generation) (scan1coef): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m1-3.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot_coefCC(m1.blup[[i]], 
+              gmap[chr], 
+              scan1_output=m1.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex &amp; generation) [blup values] (scan1blup): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m1-4.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot(m1.snps[[i]]$lod, 
+       m1.snps[[i]]$snpinfo, 
+       drop_hilit=1.5, 
+       genes=m1.genes[[i]],
+       main = paste0(&quot;SNP Association Mapping (sex &amp; generation) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m1-5.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#}
+#dev.off()
+#}</code></pre>
 </div>
-<div id="haplotype-phasing" class="section level3">
-<h3>Haplotype Phasing</h3>
-<ul>
-<li>Before QC
-<ul>
-<li><a href="0.2_haplotype_comparison_bqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="0.2_haplotype_comparison_bqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_bqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_bqc_129Sj.v265d.html">129Sj.v265d</a></li>
-</ul></li>
-<li>After Correcting For Problematic Samples
-<ul>
-<li><a href="0.2_haplotype_comparison_aqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="0.2_haplotype_comparison_aqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_aqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="0.2_haplotype_comparison_aqc_129Sj.v265d.html">129Sj.v265d</a></li>
-</ul></li>
-</ul>
+<div id="plot-scan-results-m2-sex" class="section level3">
+<h3>Plot Scan Results: m2 (Sex)</h3>
+<pre class="r"><code>print(&quot;Covariates: Sex (m2)&quot;)</code></pre>
+<pre><code>[1] &quot;Covariates: Sex (m2)&quot;</code></pre>
+<pre class="r"><code>load(paste0(&quot;output/qtl.mapping_sorted/m2_sex_&quot;,name.phenocsv,&quot;_sorted.RData&quot;))
+
+##############################################
+## permutation results
+##############################################
+#The default is to return the 5% significance thresholds. Thresholds for other (or for multiple) significance levels can be obtained via the alpha argument.
+
+#for(i in names(m2.qtl.out)){
+#for(i in phenotypes){
+operm &lt;- get(load(paste0(&quot;output/permu_sorted/m2_sex_nperm.100_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_sorted.RData&quot;)))
+cutoff = summary(operm, alpha = c(0.2, 0.1, 0.05, 0.01))
+cutoff</code></pre>
+<pre><code>LOD thresholds (100 permutations)
+     pheno1
+0.2    7.45
+0.1    8.20
+0.05   8.58
+0.01  10.42</code></pre>
+<pre class="r"><code>##############################################
+## Genome wide results
+##############################################
+#pdf(file = paste0(&quot;output/figures_sorted/m2_sex_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_genomescan_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+ymx &lt;- maxlod(m2.qtl.out[[i]]) # overall maximum LOD score
+plot(m2.qtl.out[[i]], 
+  gmap, 
+  lodcolumn=1,
+  col=&quot;slateblue&quot;, 
+  ylim=c(0, ymx*1.3),
+  main=paste0(&quot;Genomescan (sex) (scan1): &quot;, i))
+ abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2) </code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m2-1.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#dev.off()
+
+#pdf(file = paste0(&quot;output/figures_sorted/m2_sex_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_gwas_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+plot(m2.gwas[[i]]$lod, 
+     m2.gwas[[i]]$snpinfo, 
+     altcol=&quot;green4&quot;, 
+     gap=0, 
+     main = paste0(&quot;GWAS (sex) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m2-2.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#     abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2)
+#dev.off()
+
+##############################################
+## QTL Results
+##############################################
+
+#load blup results
+load(paste0(&quot;output/blup_sorted/m2_sex_blup_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_sorted.RData&quot;))
+
+#coeffects plot
+#pdf(file = paste0(&quot;output/figures_sorted/m2_sex_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_coeff_geneplot_sorted.pdf&quot;), width = 14)
+#for(i in names(m2.qtl.out)){
+  chr &lt;- as.character(m2.peak[[i]][m2.peak[[i]]$lodcolumn == i,&quot;chr&quot;])
+  par(mar=c(4.1, 4.1, 1.6, 1.6))
+  plot_coefCC(m2.coef[[i]], 
+              gmap[chr], 
+              scan1_output=m2.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex) (scan1coef): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m2-3.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot_coefCC(m2.blup[[i]], 
+              gmap[chr], 
+              scan1_output=m2.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex) [blup values] (scan1blup): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m2-4.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot(m2.snps[[i]]$lod, 
+       m2.snps[[i]]$snpinfo, 
+       drop_hilit=1.5, 
+       genes=m2.genes[[i]],
+       main = paste0(&quot;SNP Association Mapping (sex) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m2-5.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#}
+#dev.off()
+#}</code></pre>
 </div>
-<div id="phenotype-qc" class="section level3">
-<h3>1. Phenotype QC</h3>
-<ul>
-<li>Phenotypes - Max_IOP
-<ul>
-<li><a href="1.1_phenotypes_b6.v265d.html">b6.v265d</a></li>
-<li><a href="1.1_phenotypes_b6.q105x.html">b6.q105x</a></li>
-<li><a href="1.1_phenotypes_d2.q105x.html">d2.q105x</a></li>
-<li><a href="1.1_phenotypes_129Sj.v265d.html">129Sj.v265d</a></li>
-</ul></li>
-</ul>
+<div id="plot-scan-results-m5-sex-cross" class="section level3">
+<h3>Plot Scan Results: m5 (Sex + Cross)</h3>
+<pre class="r"><code>print(&quot;Covariates: Sex &amp; Cross (m5)&quot;)</code></pre>
+<pre><code>[1] &quot;Covariates: Sex &amp; Cross (m5)&quot;</code></pre>
+<pre class="r"><code>load(paste0(&quot;output/qtl.mapping_sorted/m5_sex.cross_&quot;,name.phenocsv,&quot;_sorted.RData&quot;))
+
+##############################################
+## permutation results
+##############################################
+#The default is to return the 5% significance thresholds. Thresholds for other (or for multiple) significance levels can be obtained via the alpha argument.
+
+#for(i in names(m5.qtl.out)){
+#for(i in phenotypes){
+operm &lt;- get(load(paste0(&quot;output/permu_sorted/m5_sex.cross_nperm.100_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_sorted.RData&quot;)))
+cutoff = summary(operm, alpha = c(0.2, 0.1, 0.05, 0.01))
+cutoff</code></pre>
+<pre><code>LOD thresholds (100 permutations)
+     pheno1
+0.2    6.83
+0.1    7.42
+0.05   8.03
+0.01   8.65</code></pre>
+<pre class="r"><code>##############################################
+## Genome wide results
+##############################################
+#pdf(file = paste0(&quot;output/figures_sorted/m5_sex.cross_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_genomescan_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+ymx &lt;- maxlod(m5.qtl.out[[i]]) # overall maximum LOD score
+plot(m5.qtl.out[[i]], 
+  gmap, 
+  lodcolumn=1,
+  col=&quot;slateblue&quot;, 
+  ylim=c(0, ymx*1.3),
+  main=paste0(&quot;Genomescan (sex &amp; cross) (scan1): &quot;, i))
+  abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2) </code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m5-1.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#dev.off()
+
+#pdf(file = paste0(&quot;output/figures_sorted/m5_sex.cross_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_gwas_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+plot(m5.gwas[[i]]$lod, 
+     m5.gwas[[i]]$snpinfo, 
+     altcol=&quot;green4&quot;, 
+     gap=0, 
+     main = paste0(&quot;GWAS (sex &amp; cross) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m5-2.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#     abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2)
+#dev.off()
+
+##############################################
+## QTL Results
+##############################################
+
+#load blup results
+load(paste0(&quot;output/blup_sorted/m5_sex.cross_blup_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_sorted.RData&quot;))
+
+#coeffects plot
+#pdf(file = paste0(&quot;output/figures_sorted/m5_sex.cross_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_coeff_geneplot_sorted.pdf&quot;), width = 14)
+#for(i in names(m5.qtl.out)){
+  chr &lt;- as.character(m5.peak[[i]][m5.peak[[i]]$lodcolumn == i,&quot;chr&quot;])
+  par(mar=c(4.1, 4.1, 1.6, 1.6))
+  plot_coefCC(m5.coef[[i]], 
+              gmap[chr], 
+              scan1_output=m5.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex &amp; cross) (scan1coef): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m5-3.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot_coefCC(m5.blup[[i]], 
+              gmap[chr], 
+              scan1_output=m5.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex &amp; cross) [blup values] (scan1blup): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m5-4.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot(m5.snps[[i]]$lod, 
+       m5.snps[[i]]$snpinfo, 
+       drop_hilit=1.5, 
+       genes=m5.genes[[i]],
+       main = paste0(&quot;SNP Association Mapping (sex &amp; cross) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m5-5.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#}
+#dev.off()
+#}</code></pre>
 </div>
-<div id="genotype-qc" class="section level3">
-<h3>2. Genotype QC</h3>
-<ul>
-<li>Step 1: Sample QC
-<ul>
-<li>Before QC
-<ul>
-<li><a href="2.1_sample_bqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="2.1_sample_bqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="2.1_sample_bqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="2.1_sample_bqc_129Sj.v265d.html">129Sj.v265d</a></li>
-<li><a href="2.1_sample_bqc_all.samples.html">all samples</a></li>
-</ul></li>
-<li>After Correcting For Problematic Samples
-<ul>
-<li><a href="2.1_sample_bqc_b6.v265d_aqc.html">b6.v265d</a></li>
-<li><a href="2.1_sample_bqc_b6.q105x_aqc.html">b6.q105x</a></li>
-<li><a href="2.1_sample_bqc_d2.q105x_aqc.html">d2.q105x</a></li>
-<li><a href="2.1_sample_bqc_129Sj.v265d_aqc.html">129Sj.v265d</a></li>
-</ul></li>
-</ul></li>
-<li>Step 2: SNP QC (Monomorphic, Genotype Error &amp; Missing Data)
-<ul>
-<li>Before QC
-<ul>
-<li><a href="2.2.1_snp_qc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="2.2.1_snp_qc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="2.2.1_snp_qc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="2.2.1_snp_qc_129Sj.v265d.html">129Sj.v265d</a></li>
-<li><a href="2.2.1_snp_qc_all.samples.html">all samples</a></li>
-</ul></li>
-<li>After Correcting For Problematic Samples
-<ul>
-<li><a href="2.2.1_snp_qc_b6.v265d_aqc.html">b6.v265d</a></li>
-<li><a href="2.2.1_snp_qc_b6.q105x_aqc.html">b6.q105x</a></li>
-<li><a href="2.2.1_snp_qc_d2.q105x_aqc.html">d2.q105x</a></li>
-<li><a href="2.2.1_snp_qc_129Sj.v265d_aqc.html">129Sj.v265d</a></li>
-<li><a href="">all samples</a></li>
-</ul></li>
-</ul></li>
-<li>Step 3: Effect of Data Cleaning
-<ul>
-<li>Before QC
-<ul>
-<li><a href="2.3.1_afterqc_b6.v265d.html">b6.v265d</a></li>
-<li><a href="2.3.1_afterqc_b6.q105x.html">b6.q105x</a></li>
-<li><a href="2.3.1_afterqc_d2.q105x.html">d2.q105x</a></li>
-<li><a href="2.3.1_afterqc_129Sj.v265d.html">129Sj.v265d</a></li>
-<li><a href="2.3.1_afterqc_all.samples.html">all samples</a></li>
-</ul></li>
-<li>After Correcting For Problematic Samples
-<ul>
-<li><a href="2.3.1_afterqc_b6.v265d_aqc.html">b6.v265d</a></li>
-<li><a href="2.3.1_afterqc_b6.q105x_aqc.html">b6.q105x</a></li>
-<li><a href="2.3.1_afterqc_d2.q105x_aqc.html">d2.q105x</a></li>
-<li><a href="2.3.1_afterqc_129Sj.v265d_aqc.html">129Sj.v265d</a></li>
-<li><a href="">all samples</a></li>
-</ul></li>
-</ul></li>
-<li>Step 4: Preparing Files for QTL Analysis
-<ul>
-<li><a href="2.4.1_preparing_files_qtl2.html">After Correcting For Problematic Samples</a></li>
-</ul></li>
-</ul>
-</div>
-<div id="qtl-analysis" class="section level3">
-<h3>3. QTL Analysis</h3>
-<ul>
-<li>Step 1: Recombination Block Size &amp; Founder Proportions</li>
-<li>Step 2: GCTA Heritability</li>
-<li>Step 3: QTL Mapping (<code>R/qtl2</code>)</li>
-<li>Step 4: QTL Permutation (<code>R/qtl2</code>)</li>
-<li>Step 5: QTL Best Linear Unbiased Prediction (BLUP) (<code>R/qtl2</code>)</li>
-<li>Step 6: Results from <code>R/qtl2</code> analysis [Raw Data]
-<ul>
-<li>All variants included
-<ul>
-<li><a href="3.6_plot_qtl_mapping_max_IOP_sorted_edited.html">max IOP</a></li>
-<li><a href="3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.html">max corneal haze</a></li>
-<li><a href="3.6_plot_qtl_mapping_Pupil_not_round_binary_sorted_edited.html">Pupil_not_round_binary</a></li>
-</ul></li>
-</ul></li>
-</ul>
+<div id="plot-scan-results-m7-sex-cross-genotype" class="section level3">
+<h3>Plot Scan Results: m7 (Sex + Cross + Genotype)</h3>
+<pre class="r"><code>print(&quot;Covariates: Sex &amp; Cross &amp; Genotype (m7)&quot;)</code></pre>
+<pre><code>[1] &quot;Covariates: Sex &amp; Cross &amp; Genotype (m7)&quot;</code></pre>
+<pre class="r"><code>load(paste0(&quot;output/qtl.mapping_sorted/m7_sex.cross.genotype_&quot;,name.phenocsv,&quot;_sorted.RData&quot;))
+
+##############################################
+## permutation results
+##############################################
+#The default is to return the 5% significance thresholds. Thresholds for other (or for multiple) significance levels can be obtained via the alpha argument.
+
+#for(i in names(m7.qtl.out)){
+#for(i in phenotypes){
+operm &lt;- get(load(paste0(&quot;output/permu_sorted/m7_sex.cross.genotype_nperm.100_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_sorted.RData&quot;)))
+cutoff = summary(operm, alpha = c(0.2, 0.1, 0.05, 0.01))
+cutoff</code></pre>
+<pre><code>LOD thresholds (100 permutations)
+     pheno1
+0.2    7.32
+0.1    7.99
+0.05   8.38
+0.01   9.64</code></pre>
+<pre class="r"><code>##############################################
+## Genome wide results
+##############################################
+#pdf(file = paste0(&quot;output/figures_sorted/m7_sex.cross.genotype_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_genomescan_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+ymx &lt;- maxlod(m7.qtl.out[[i]]) # overall maximum LOD score
+plot(m7.qtl.out[[i]], 
+  gmap, 
+  lodcolumn=1,
+  col=&quot;slateblue&quot;, 
+  ylim=c(0, ymx*1.3),
+  main=paste0(&quot;Genomescan (sex &amp; cross &amp; genotype) (scan1): &quot;, i))
+  abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2) </code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m7-1.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#dev.off()
+
+#pdf(file = paste0(&quot;output/figures_sorted/m7_sex.cross.genotype_&quot;,name.phenocsv,&quot;_&quot;, i,&quot;_gwas_sorted.pdf&quot;), width = 14)
+#par(mar=c(5.1, 4.1, 1.1, 1.1))
+plot(m7.gwas[[i]]$lod, 
+     m7.gwas[[i]]$snpinfo, 
+     altcol=&quot;green4&quot;, 
+     gap=0, 
+     main = paste0(&quot;GWAS (sex &amp; cross &amp; genotype) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m7-2.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#     abline(h = cutoff, col = c(&quot;purple&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;), lwd = 2)
+#dev.off()
+
+##############################################
+## QTL Results
+##############################################
+
+#load blup results
+load(paste0(&quot;output/blup_sorted/m7_sex.cross.genotype_blup_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_sorted.RData&quot;))
+
+#coeffects plot
+#pdf(file = paste0(&quot;output/figures_sorted/m7_sex.cross.genotype_&quot;,name.phenocsv,&quot;_&quot;,i,&quot;_coeff_geneplot_sorted.pdf&quot;), width = 14)
+#for(i in names(m7.qtl.out)){
+  chr &lt;- as.character(m7.peak[[i]][m7.peak[[i]]$lodcolumn == i,&quot;chr&quot;])
+  par(mar=c(4.1, 4.1, 1.6, 1.6))
+  plot_coefCC(m7.coef[[i]], 
+              gmap[chr], 
+              scan1_output=m7.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex &amp; cross &amp; genotype) (scan1coef): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m7-3.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot_coefCC(m7.blup[[i]], 
+              gmap[chr], 
+              scan1_output=m7.qtl.out[[i]], 
+              bgcolor=&quot;gray95&quot;, #legend=&quot;bottomleft&quot;, 
+              main =paste0(&quot;Genomescan (sex &amp; cross &amp; genotype) [blup values] (scan1blup): &quot;,i)
+              )</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m7-4.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  plot(m7.snps[[i]]$lod, 
+       m7.snps[[i]]$snpinfo, 
+       drop_hilit=1.5, 
+       genes=m7.genes[[i]],
+       main = paste0(&quot;SNP Association Mapping (sex &amp; cross &amp; genotype) (scan1snps): &quot;,i))</code></pre>
+<p><img src="figure/3.6_plot_qtl_mapping_max_corneal_haze_sorted_edited.Rmd/plot%20scan%20result%20for%20m7-5.png" width="1632" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#}
+#dev.off()
+#}</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1342,15 +1246,22 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] workflowr_1.6.2
+[1] ggplot2_3.3.2   qtl2_0.22       workflowr_1.6.2
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.4.6    rprojroot_1.3-2 digest_0.6.25   later_1.0.0    
- [5] R6_2.4.1        backports_1.1.7 git2r_0.26.1    magrittr_1.5   
- [9] evaluate_0.14   stringi_1.4.6   rlang_0.4.6     fs_1.4.1       
-[13] promises_1.1.0  whisker_0.4     rmarkdown_2.1   tools_3.6.2    
-[17] stringr_1.4.0   glue_1.4.1      httpuv_1.5.2    xfun_0.13      
-[21] yaml_2.2.1      compiler_3.6.2  htmltools_0.4.0 knitr_1.28     </code></pre>
+ [1] Rcpp_1.0.4.6      pillar_1.4.4      compiler_3.6.2    later_1.0.0      
+ [5] git2r_0.26.1      highr_0.8         tools_3.6.2       digest_0.6.25    
+ [9] bit_1.1-15.2      RSQLite_2.2.0     evaluate_0.14     memoise_1.1.0    
+[13] lifecycle_0.2.0   tibble_3.0.1      gtable_0.3.0      pkgconfig_2.0.3  
+[17] rlang_0.4.6       DBI_1.1.0         yaml_2.2.1        parallel_3.6.2   
+[21] xfun_0.13         withr_2.2.0       dplyr_0.8.5       stringr_1.4.0    
+[25] knitr_1.28        fs_1.4.1          vctrs_0.3.1       tidyselect_1.0.0 
+[29] rprojroot_1.3-2   bit64_0.9-7       grid_3.6.2        glue_1.4.1       
+[33] data.table_1.12.8 R6_2.4.1          rmarkdown_2.1     purrr_0.3.4      
+[37] blob_1.2.1        magrittr_1.5      whisker_0.4       ellipsis_0.3.1   
+[41] backports_1.1.7   scales_1.1.1      promises_1.1.0    htmltools_0.4.0  
+[45] assertthat_0.2.1  colorspace_1.4-1  httpuv_1.5.2      stringi_1.4.6    
+[49] munsell_0.5.0     crayon_1.3.4     </code></pre>
 </div>
 </div>
 
