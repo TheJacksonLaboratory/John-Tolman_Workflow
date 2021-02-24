@@ -121,3 +121,6 @@ output:
 			+ [d2.q105x](3.6_plot_qtl_mapping_Pupil_not_round_binary_sorted_edited_d2.q105x.html)
 			+ [129Sj.v265d](3.6_plot_qtl_mapping_Pupil_not_round_binary_sorted_edited_129Sj.v265d.html)
 			+ [all samples](3.6_plot_qtl_mapping_Pupil_not_round_binary_sorted_edited.html)
+	+ After Correcting For Problematic Samples (problematic variants removed)
+		+ [max IOP]
+			+ [all samples](3.6_plot_qtl_mapping_max_IOP_sorted_edited_all.grid.html)
